@@ -617,11 +617,36 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                  
+                  const SizedBox(height: 28),
+
+                    //centered "View all" button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: placeholderCallbackForButtons,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4d2963),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 28, vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                        ),
+                        child: const Text(
+                          'View all',
+                          style: TextStyle(
+                            fontSize: 16,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-
+            
             // Footer
             Container(
               width: double.infinity,
