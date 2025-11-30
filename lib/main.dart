@@ -42,6 +42,67 @@ class HomeScreen extends StatelessWidget {
     // This is the event handler for buttons that don't work yet
   }
 
+  void _openBurgerMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: (c) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Home'),
+                onTap: () {
+                  Navigator.pop(c);
+                  navigateToHome(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Shop'),
+                onTap: () {
+                  Navigator.pop(c);
+                  placeholderCallbackForButtons();
+                },
+              ),
+              ListTile(
+                title: const Text('The Print Shack'),
+                onTap: () {
+                  Navigator.pop(c);
+                  placeholderCallbackForButtons();
+                },
+              ),
+              ListTile(
+                title: const Text('SALE!'),
+                onTap: () {
+                  Navigator.pop(c);
+                  placeholderCallbackForButtons();
+                },
+              ),
+              ListTile(
+                title: const Text('About'),
+                onTap: () {
+                  Navigator.pop(c);
+                  placeholderCallbackForButtons();
+                },
+              ),
+              ListTile(
+                title: const Text('UPSU.net'),
+                onTap: () {
+                  Navigator.pop(c);
+                  placeholderCallbackForButtons();
+                },
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,135 +136,150 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   height: 96,
                   color: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Row(
-                    children: [
-                      // Logo (left)
-                      GestureDetector(
-                        onTap: () => navigateToHome(context),
-                        child: Image.network(
-                          'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                          height: 40,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[200],
-                              width: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    final isMobile = constraints.maxWidth < 700;
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Logo (left) — constrained so it can't grow and cause overflow
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 160,
+                            minWidth: 48,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                            child: Image.network(
+                              'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
                               height: 40,
-                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
-                            );
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(width: 40),
-
-                      // Center navigation 
-                      Expanded(
-                        child: Transform.translate(
-                          offset: const Offset(-20, 0),
-                          child: Center(
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 700),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Home (active with underline)
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () => navigateToHome(context),
-                                        style: TextButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                                          foregroundColor: Colors.black,
-                                        ),
-                                        child: const Text('Home', style: TextStyle(fontSize: 16)),
-                                      ),
-                                      Container(height: 2, width: 36, color: Colors.black),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 8),
-                                  // Shop 
-                                  TextButton(
-                                    onPressed: placeholderCallbackForButtons,
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      foregroundColor: Colors.black,
-                                    ),
-                                    child: const Text('Shop', style: TextStyle(fontSize: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  // The Print Shack 
-                                  TextButton(
-                                    onPressed: placeholderCallbackForButtons,
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      foregroundColor: Colors.black,
-                                    ),
-                                    child: const Text('The Print Shack', style: TextStyle(fontSize: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  TextButton(
-                                    onPressed: placeholderCallbackForButtons,
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      foregroundColor: Colors.black,
-                                    ),
-                                    child: const Text('SALE!', style: TextStyle(fontSize: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  TextButton(
-                                    onPressed: placeholderCallbackForButtons,
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      foregroundColor: Colors.black,
-                                    ),
-                                    child: const Text('About', style: TextStyle(fontSize: 16)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  TextButton(
-                                    onPressed: placeholderCallbackForButtons,
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      foregroundColor: Colors.black,
-                                    ),
-                                    child: const Text('UPSU.net', style: TextStyle(fontSize: 16)),
-                                  ),
-                                ],
-                              ),
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[200],
+                                  width: 40,
+                                  height: 40,
+                                  child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                                );
+                              },
                             ),
                           ),
                         ),
-                      ),
 
-                      // Right-side icons
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.search, size: 28, color: Colors.black87),
-                            padding: const EdgeInsets.all(8),
-                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                            onPressed: placeholderCallbackForButtons,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.person_outline, size: 28, color: Colors.black87),
-                            padding: const EdgeInsets.all(8),
-                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                            onPressed: placeholderCallbackForButtons,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.shopping_bag_outlined, size: 28, color: Colors.black87),
-                            padding: const EdgeInsets.all(8),
-                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                            onPressed: placeholderCallbackForButtons,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        // small gap
+                        const SizedBox(width: 8),
+
+                        // Center: either nav (desktop) or burger icon (mobile)
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: isMobile
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.menu, size: 28, color: Colors.black87),
+                                    onPressed: () => _openBurgerMenu(context),
+                                    padding: const EdgeInsets.all(6),
+                                  ),
+                                )
+                              : Center(
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(maxWidth: 700),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () => navigateToHome(context),
+                                              style: TextButton.styleFrom(
+                                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                foregroundColor: Colors.black,
+                                              ),
+                                              child: const Text('Home', style: TextStyle(fontSize: 16)),
+                                            ),
+                                            Container(height: 2, width: 36, color: Colors.black),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 8),
+                                        TextButton(
+                                          onPressed: placeholderCallbackForButtons,
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            foregroundColor: Colors.black,
+                                          ),
+                                          child: const Text('Shop', style: TextStyle(fontSize: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        TextButton(
+                                          onPressed: placeholderCallbackForButtons,
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            foregroundColor: Colors.black,
+                                          ),
+                                          child: const Text('The Print Shack', style: TextStyle(fontSize: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        TextButton(
+                                          onPressed: placeholderCallbackForButtons,
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            foregroundColor: Colors.black,
+                                          ),
+                                          child: const Text('SALE!', style: TextStyle(fontSize: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        TextButton(
+                                          onPressed: placeholderCallbackForButtons,
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            foregroundColor: Colors.black,
+                                          ),
+                                          child: const Text('About', style: TextStyle(fontSize: 16)),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        TextButton(
+                                          onPressed: placeholderCallbackForButtons,
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            foregroundColor: Colors.black,
+                                          ),
+                                          child: const Text('UPSU.net', style: TextStyle(fontSize: 16)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                        ),
+
+                        // Right-side icons (always visible) — tightened spacing and smaller minWidth
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.search, size: 26, color: Colors.black87),
+                              padding: const EdgeInsets.all(6),
+                              constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                              onPressed: placeholderCallbackForButtons,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.person_outline, size: 26, color: Colors.black87),
+                              padding: const EdgeInsets.all(6),
+                              constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                              onPressed: placeholderCallbackForButtons,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.shopping_bag_outlined, size: 26, color: Colors.black87),
+                              padding: const EdgeInsets.all(6),
+                              constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                              onPressed: placeholderCallbackForButtons,
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }),
                 ),
               ],
             ),
