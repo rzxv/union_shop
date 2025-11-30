@@ -799,6 +799,106 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
+            // Add a Personal Touch Section
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 24.0),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      final isMobile = constraints.maxWidth < 700;
+                      return isMobile
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // image on top for mobile
+                                SizedBox(
+                                  height: 320,
+                                  child: _NetworkImageWithFallback(
+                                    url: 'https://shop.upsu.net/cdn/shop/files/upsu_printshack_1024x1024.jpg?v=1',
+                                    altUrl:
+                                        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'Add a Personal Touch',
+                                  style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: Colors.black87),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'First add your item of clothing to your cart then click below to add your text! One line of text contains 10 characters!',
+                                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                                ),
+                                const SizedBox(height: 20),
+                                ElevatedButton(
+                                  onPressed: placeholderCallbackForButtons,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF4d2963),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                                  ),
+                                  child: const Text('CLICK HERE TO ADD TEXT!', style: TextStyle(letterSpacing: 1)),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                // left text column
+                                Expanded(
+                                  flex: 6,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 24.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Add a Personal Touch',
+                                          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: Colors.black87),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'First add your item of clothing to your cart then click below to add your text! One line of text contains 10 characters!',
+                                          style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                                        ),
+                                        const SizedBox(height: 28),
+                                        ElevatedButton(
+                                          onPressed: placeholderCallbackForButtons,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(0xFF4d2963),
+                                            foregroundColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                                          ),
+                                          child: const Text('CLICK HERE TO ADD TEXT!', style: TextStyle(letterSpacing: 1)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // right image
+                                Expanded(
+                                  flex: 5,
+                                  child: SizedBox(
+                                    height: 340,
+                                    child: _NetworkImageWithFallback(
+                                      url: 'https://shop.upsu.net/cdn/shop/files/upsu_printshack_1024x1024.jpg?v=1',
+                                      altUrl:
+                                          'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                                    ),
+                                   ),
+                                 ),
+                              ],
+                            );
+                    }),
+                  ),
+                ),
+              ),
+            ),
+
+            
+
             // Footer
             Container(
               width: double.infinity,
@@ -1115,6 +1215,56 @@ class ProductCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _NetworkImageWithFallback extends StatelessWidget {
+  final String url;
+  final String? altUrl;
+  final double? height;
+
+  const _NetworkImageWithFallback({
+    super.key,
+    required this.url,
+    this.altUrl,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      url,
+      fit: BoxFit.cover,
+      height: height,
+      width: double.infinity,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          height: height,
+          color: Colors.grey[200],
+          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        if (altUrl != null) {
+          // try alternate image
+          return Image.network(
+            altUrl!,
+            fit: BoxFit.cover,
+            height: height,
+            width: double.infinity,
+            errorBuilder: (c, e, s) => Container(
+              color: Colors.grey[300],
+              child: const Center(child: Icon(Icons.image_not_supported, color: Colors.grey)),
+            ),
+          );
+        }
+        return Container(
+          color: Colors.grey[300],
+          child: const Center(child: Icon(Icons.image_not_supported, color: Colors.grey)),
+        );
+      },
     );
   }
 }
