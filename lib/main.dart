@@ -47,121 +47,164 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header
+            // Top sale banner 
             Container(
-              height: 100,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  // Top banner
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    color: const Color(0xFF4d2963),
-                    child: const Text(
-                      'BIG SALE! OUR ESSENTIAL RANGE HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold, // made bold
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              color: const Color(0xFF4d2963),
+              child: const Text(
+                'BIG SALE! OUR ESSENTIAL RANGE HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            // Header 
+            Column(
+              children: [
+                // Thin purple top line
+                Container(
+                  height: 6,
+                  color: const Color(0xFF4d2963),
+                ),
+                Container(
+                  height: 96,
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Row(
+                    children: [
+                      // Logo (left)
+                      GestureDetector(
+                        onTap: () => navigateToHome(context),
+                        child: Image.network(
+                          'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                          height: 40,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              width: 40,
+                              height: 40,
+                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ),
-                  // Main header
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              navigateToHome(context);
-                            },
-                            child: Image.network(
-                              'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                              height: 18,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey[300],
-                                  width: 18,
-                                  height: 18,
-                                  child: const Center(
-                                    child: Icon(Icons.image_not_supported,
-                                        color: Colors.grey),
+
+                      const SizedBox(width: 40),
+
+                      // Center navigation 
+                      Expanded(
+                        child: Transform.translate(
+                          offset: const Offset(-20, 0),
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 700),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Home (active with underline)
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () => navigateToHome(context),
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          foregroundColor: Colors.black,
+                                        ),
+                                        child: const Text('Home', style: TextStyle(fontSize: 16)),
+                                      ),
+                                      Container(height: 2, width: 36, color: Colors.black),
+                                    ],
                                   ),
-                                );
-                              },
+                                  const SizedBox(width: 8),
+                                  // Shop 
+                                  TextButton(
+                                    onPressed: placeholderCallbackForButtons,
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    child: const Text('Shop', style: TextStyle(fontSize: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  // The Print Shack 
+                                  TextButton(
+                                    onPressed: placeholderCallbackForButtons,
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    child: const Text('The Print Shack', style: TextStyle(fontSize: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  TextButton(
+                                    onPressed: placeholderCallbackForButtons,
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    child: const Text('SALE!', style: TextStyle(fontSize: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  TextButton(
+                                    onPressed: placeholderCallbackForButtons,
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    child: const Text('About', style: TextStyle(fontSize: 16)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  TextButton(
+                                    onPressed: placeholderCallbackForButtons,
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      foregroundColor: Colors.black,
+                                    ),
+                                    child: const Text('UPSU.net', style: TextStyle(fontSize: 16)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const Spacer(),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 600),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.search,
-                                    size: 18,
-                                    color: Colors.grey,
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                  onPressed: placeholderCallbackForButtons,
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.person_outline,
-                                    size: 18,
-                                    color: Colors.grey,
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                  onPressed: placeholderCallbackForButtons,
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.shopping_bag_outlined,
-                                    size: 18,
-                                    color: Colors.grey,
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                  onPressed: placeholderCallbackForButtons,
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.menu,
-                                    size: 18,
-                                    color: Colors.grey,
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                  onPressed: placeholderCallbackForButtons,
-                                ),
-                              ],
-                            ),
+                        ),
+                      ),
+
+                      // Right-side icons
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.search, size: 28, color: Colors.black87),
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            onPressed: placeholderCallbackForButtons,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.person_outline, size: 28, color: Colors.black87),
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            onPressed: placeholderCallbackForButtons,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.shopping_bag_outlined, size: 28, color: Colors.black87),
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            onPressed: placeholderCallbackForButtons,
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
 
             // Hero Section
