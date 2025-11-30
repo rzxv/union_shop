@@ -899,19 +899,232 @@ class HomeScreen extends StatelessWidget {
 
             
 
-            // Footer
+            // Footer 
             Container(
               width: double.infinity,
-              color: Colors.grey[50],
-              padding: const EdgeInsets.all(24),
-              child: const Text(
-                'Placeholder Footer',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              color: const Color(0xFFFAFAFA),
+              child: LayoutBuilder(builder: (context, constraints) {
+                final w = constraints.maxWidth;
+                final isMobile = w < 700;
+                final horizontalPadding = isMobile ? 12.0 : 40.0;
+
+                final headingStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: const Color(0xFF333333));
+                final bodyStyle = TextStyle(fontSize: 14, color: const Color(0xFF4A4A4A), height: 1.35);
+                final strongStyle = bodyStyle.copyWith(fontWeight: FontWeight.w700);
+
+                Widget openingHours = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Opening Hours', style: headingStyle),
+                    const SizedBox(height: 12),
+                    RichText(
+                      text: TextSpan(
+                        style: bodyStyle.copyWith(fontStyle: FontStyle.italic),
+                        children: [
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: const Icon(Icons.ac_unit, size: 16, color: Color(0xFF4A4A4A)),
+                          ),
+                          const TextSpan(text: ' '),
+                          const TextSpan(text: 'Winter Break Closure Dates'),
+                          const TextSpan(text: ' '),
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: const Icon(Icons.ac_unit, size: 16, color: Color(0xFF4A4A4A)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text('Closing 4pm 19/12/2025', style: strongStyle),
+                    Text('Reopening 10am 05/01/2026', style: strongStyle),
+                    const SizedBox(height: 8),
+                    Text('Last post date: 12pm on 18/12/2025', style: strongStyle),
+                    const SizedBox(height: 12),
+                    Text('-----------------------------', style: bodyStyle),
+                    const SizedBox(height: 10),
+                    Text('(Term Time)', style: strongStyle),
+                    const SizedBox(height: 6),
+                    Text('Monday - Friday 10am - 4pm', style: bodyStyle),
+                    const SizedBox(height: 8),
+                    Text('(Outside of Term Time / Consolidation Weeks)', style: bodyStyle),
+                    Text('Monday - Friday 10am - 3pm', style: bodyStyle),
+                    const SizedBox(height: 8),
+                    Text('Purchase online 24/7', style: strongStyle),
+                  ],
+                );
+
+                Widget helpColumn = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Help and Information', style: headingStyle),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: placeholderCallbackForButtons,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        foregroundColor: const Color(0xFF333333),
+                        textStyle: const TextStyle(fontSize: 14),
+                      ),
+                      child: const Text('Search', textAlign: TextAlign.left),
+                    ),
+                    TextButton(
+                      onPressed: placeholderCallbackForButtons,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        foregroundColor: const Color(0xFF333333),
+                        textStyle: const TextStyle(fontSize: 14),
+                      ),
+                      child: const Text(
+                        'Terms & Conditions of Sale',
+                        textAlign: TextAlign.left,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: placeholderCallbackForButtons,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        foregroundColor: const Color(0xFF333333),
+                        textStyle: const TextStyle(fontSize: 14),
+                      ),
+                      child: const Text('Policy', textAlign: TextAlign.left),
+                    ),
+                    // subscribe column moved to subscribeColumn below (keeps helpColumn solely links)
+                   ],
+                 );
+ 
+                Widget subscribeColumn = Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text('Latest Offers', style: headingStyle),
+                     const SizedBox(height: 12),
+                     Row(
+                       children: [
+                         Expanded(
+                           child: TextField(
+                             decoration: InputDecoration(
+                               hintText: 'Email address',
+                               filled: true,
+                               fillColor: Colors.white,
+                               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                             ),
+                             style: const TextStyle(fontSize: 14),
+                           ),
+                         ),
+                         const SizedBox(width: 8),
+                         ElevatedButton(
+                           onPressed: placeholderCallbackForButtons,
+                           style: ElevatedButton.styleFrom(
+                             backgroundColor: const Color(0xFF4d2963),
+                             foregroundColor: Colors.white,
+                             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                           ),
+                           child: const Text('SUBSCRIBE', style: TextStyle(letterSpacing: 1, fontSize: 13)),
+                         ),
+                       ],
+                     ),
+                     const SizedBox(height: 8),
+                     Text('Sign up for exclusive offers and updates.', style: bodyStyle),
+                   ],
+                 );
+ 
+                 return Column(
+                   children: [
+                     Padding(
+                       padding: EdgeInsets.symmetric(vertical: 28.0, horizontal: horizontalPadding),
+                       child: ConstrainedBox(
+                         constraints: const BoxConstraints(maxWidth: 1200),
+                         child: isMobile
+                             ? Column(
+                                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                                 children: [
+                                   openingHours,
+                                   const SizedBox(height: 20),
+                                   helpColumn,
+                                   const SizedBox(height: 18),
+                                   subscribeColumn,
+                                 ],
+                               )
+                             : Row(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                 children: [
+                                   Expanded(flex: 4, child: openingHours),
+                                   const SizedBox(width: 40),
+                                   Expanded(flex: 3, child: helpColumn),
+                                   const SizedBox(width: 40),
+                                   Expanded(flex: 4, child: subscribeColumn),
+                                 ],
+                               ),
+                       ),
+                     ),
+
+                    const Divider(height: 1, color: Color(0xFFE0E0E0)),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 14.0),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1200),
+                        child: isMobile
+                            ? Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      IconButton(icon: const Icon(Icons.facebook), onPressed: placeholderCallbackForButtons, color: Colors.black54),
+                                      IconButton(icon: const Icon(Icons.share), onPressed: placeholderCallbackForButtons, color: Colors.black54),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text('© 2025, upsu-store  Powered by Shopify', style: TextStyle(color: Color(0xFF6B6B6B), fontSize: 13)),
+                                  const SizedBox(height: 12),
+                                  Wrap(
+                                    alignment: WrapAlignment.center,
+                                    spacing: 8,
+                                    children: const [
+                                      _PaymentBadge(label: ' Pay'),
+                                      _PaymentBadge(label: 'Discover'),
+                                      _PaymentBadge(label: 'G Pay'),
+                                      _PaymentBadge(label: 'Mastercard'),
+                                      _PaymentBadge(label: 'Visa'),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(icon: const Icon(Icons.facebook), onPressed: placeholderCallbackForButtons, color: Colors.black54),
+                                      IconButton(icon: const Icon(Icons.share), onPressed: placeholderCallbackForButtons, color: Colors.black54),
+                                    ],
+                                  ),
+                                  const Expanded(child: Center(child: Text('© 2025, upsu-store  Powered by Shopify', style: TextStyle(color: Color(0xFF6B6B6B), fontSize: 13)))),
+                                  Row(
+                                    children: const [
+                                      _PaymentBadge(label: ' Pay'),
+                                      SizedBox(width: 8),
+                                      _PaymentBadge(label: 'Discover'),
+                                      SizedBox(width: 8),
+                                      _PaymentBadge(label: 'G Pay'),
+                                      SizedBox(width: 8),
+                                      _PaymentBadge(label: 'Mastercard'),
+                                      SizedBox(width: 8),
+                                      _PaymentBadge(label: 'Visa'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
             ),
           ],
         ),
@@ -1266,5 +1479,80 @@ class _NetworkImageWithFallback extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class _PaymentBadge extends StatelessWidget {
+  final String label;
+  const _PaymentBadge({super.key, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: const Color(0xFFE0E0E0)),
+      ),
+      child: Text(label, style: const TextStyle(fontSize: 11, color: Colors.black54)),
+    );
+  }
+}
+
+class _FooterOpeningHours extends StatelessWidget {
+  const _FooterOpeningHours({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
+      Text('Opening Hours', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+      SizedBox(height: 12),
+      Text('❄️ Winter Break Closure Dates ❄️', style: TextStyle(fontStyle: FontStyle.italic)),
+      SizedBox(height: 8),
+      Text('Closing 4pm 19/12/2025', style: TextStyle(fontWeight: FontWeight.w700)),
+      Text('Reopening 10am 05/01/2026', style: TextStyle(fontWeight: FontWeight.w700)),
+      SizedBox(height: 8),
+      Text('Last post date: 12pm on 18/12/2025', style: TextStyle(fontWeight: FontWeight.w700)),
+      SizedBox(height: 12),
+      Text('-----------------------------'),
+      SizedBox(height: 8),
+      Text('(Term Time)', style: TextStyle(fontWeight: FontWeight.w700)),
+      SizedBox(height: 6),
+      Text('Monday - Friday 10am - 4pm'),
+      SizedBox(height: 8),
+      Text('(Outside of Term Time / Consolidation Weeks)'),
+      Text('Monday - Friday 10am - 3pm'),
+      SizedBox(height: 8),
+      Text('Purchase online 24/7', style: TextStyle(fontWeight: FontWeight.w700)),
+    ]);
+  }
+}
+
+class _FooterHelpAndSubscribeStacked extends StatelessWidget {
+  final VoidCallback onSubscribe;
+  const _FooterHelpAndSubscribeStacked({super.key, required this.onSubscribe});
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Text('Help and Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+      const SizedBox(height: 12),
+      TextButton(onPressed: () {}, style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: Colors.black87), child: const Text('Search')),
+      TextButton(onPressed: () {}, style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: Colors.black87), child: const Text('Terms & Conditions of Sale')),
+      TextButton(onPressed: () {}, style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: Colors.black87), child: const Text('Policy')),
+      const SizedBox(height: 12),
+      const Text('Latest Offers', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+      const SizedBox(height: 8),
+      Row(children: [
+        Expanded(
+          child: TextField(
+            decoration: InputDecoration(hintText: 'Email address', filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12), border: OutlineInputBorder(borderRadius: BorderRadius.circular(2))),
+          ),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4d2963), foregroundColor: Colors.white), child: const Text('SUBSCRIBE')),
+      ]),
+      const SizedBox(height: 8),
+      const Text('Sign up for exclusive offers and updates.'),
+    ]);
   }
 }
