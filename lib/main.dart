@@ -646,7 +646,159 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
+            // Our Range Section 
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000), // 
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Center(
+                          child: Text(
+                            'OUR RANGE',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.grey[800],
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        LayoutBuilder(builder: (context, constraints) {
+                          final width = constraints.maxWidth;
+                          final cross = width > 900 ? 4 : 2;
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: cross,
+                            crossAxisSpacing: 24,
+                            mainAxisSpacing: 24,
+                            childAspectRatio: 1,
+                            children: [
+                              // Clothing
+                              GestureDetector(
+                                onTap: () => navigateToProduct(context),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.network(
+                                      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
+                                    ),
+                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    const Center(
+                                      child: Text(
+                                        'Clothing',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Merchandise
+                              GestureDetector(
+                                onTap: () => navigateToProduct(context),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.network(
+                                      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
+                                    ),
+                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    Center(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: const Text(
+                                          'Merchandise',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Graduation
+                              GestureDetector(
+                                onTap: () => navigateToProduct(context),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.network(
+                                      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
+                                    ),
+                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    const Center(
+                                      child: Text(
+                                        'Graduation',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // SALE
+                              GestureDetector(
+                                onTap: () => navigateToProduct(context),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.network(
+                                      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
+                                    ),
+                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    const Center(
+                                      child: Text(
+                                        'SALE',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
             // Footer
             Container(
               width: double.infinity,
