@@ -692,7 +692,7 @@ class HomeScreen extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
                                     ),
-                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    Container(color: Color.fromRGBO(0, 0, 0, 0.45)),
                                     const Center(
                                       child: Text(
                                         'Clothing',
@@ -718,7 +718,7 @@ class HomeScreen extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
                                     ),
-                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    Container(color: Color.fromRGBO(0, 0, 0, 0.45)),
                                     Center(
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
@@ -749,7 +749,7 @@ class HomeScreen extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
                                     ),
-                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    Container(color: Color.fromRGBO(0, 0, 0, 0.45)),
                                     const Center(
                                       child: Text(
                                         'Graduation',
@@ -775,7 +775,7 @@ class HomeScreen extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
                                     ),
-                                    Container(color: Colors.black.withOpacity(0.45)),
+                                    Container(color: Color.fromRGBO(0, 0, 0, 0.45)),
                                     const Center(
                                       child: Text(
                                         'SALE',
@@ -817,6 +817,7 @@ class HomeScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 320,
                                   child: _NetworkImageWithFallback(
+                                    key: const ValueKey('printshack-mobile'),
                                     url: 'https://shop.upsu.net/cdn/shop/files/upsu_printshack_1024x1024.jpg?v=1',
                                     altUrl:
                                         'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
@@ -883,6 +884,7 @@ class HomeScreen extends StatelessWidget {
                                   child: SizedBox(
                                     height: 340,
                                     child: _NetworkImageWithFallback(
+                                      key: const ValueKey('printshack-desktop'),
                                       url: 'https://shop.upsu.net/cdn/shop/files/upsu_printshack_1024x1024.jpg?v=1',
                                       altUrl:
                                           'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
@@ -994,9 +996,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                       child: const Text('Policy', textAlign: TextAlign.left),
                     ),
-                    // subscribe column moved to subscribeColumn below (keeps helpColumn solely links)
-                   ],
-                 );
+                  ],
+                );
  
                 Widget subscribeColumn = Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
@@ -1107,15 +1108,15 @@ class HomeScreen extends StatelessWidget {
                                   const Expanded(child: Center(child: Text('© 2025, upsu-store  Powered by Shopify', style: TextStyle(color: Color(0xFF6B6B6B), fontSize: 13)))),
                                   Row(
                                     children: const [
-                                      _PaymentBadge(label: ' Pay'),
+                                      _PaymentBadge(key: ValueKey('apple-pay'), label: ' Pay'),
                                       SizedBox(width: 8),
-                                      _PaymentBadge(label: 'Discover'),
+                                      _PaymentBadge(key: ValueKey('discover'), label: 'Discover'),
                                       SizedBox(width: 8),
-                                      _PaymentBadge(label: 'G Pay'),
+                                      _PaymentBadge(key: ValueKey('gpay'), label: 'G Pay'),
                                       SizedBox(width: 8),
-                                      _PaymentBadge(label: 'Mastercard'),
+                                      _PaymentBadge(key: ValueKey('mastercard'), label: 'Mastercard'),
                                       SizedBox(width: 8),
-                                      _PaymentBadge(label: 'Visa'),
+                                      _PaymentBadge(key: ValueKey('visa'), label: 'Visa'),
                                     ],
                                   ),
                                 ],
@@ -1243,7 +1244,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
                   ),
                   // Dark overlay
                   Container(
-                    color: Colors.black.withOpacity(0.45),
+                    color: Color.fromRGBO(0, 0, 0, 0.45),
                   ),
                 ],
               );
@@ -1273,7 +1274,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
                     _slides[_current]['subtitle'] ?? '',
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.white.withOpacity(0.95),
+                      color: Color.fromRGBO(255, 255, 255, 0.95),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -1357,7 +1358,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
                 // pause / play button
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Color.fromRGBO(0, 0, 0, 0.5),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: IconButton(
@@ -1435,13 +1436,10 @@ class ProductCard extends StatelessWidget {
 class _NetworkImageWithFallback extends StatelessWidget {
   final String url;
   final String? altUrl;
-  final double? height;
-
   const _NetworkImageWithFallback({
     super.key,
     required this.url,
     this.altUrl,
-    this.height,
   });
 
   @override
@@ -1449,12 +1447,10 @@ class _NetworkImageWithFallback extends StatelessWidget {
     return Image.network(
       url,
       fit: BoxFit.cover,
-      height: height,
       width: double.infinity,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
         return Container(
-          height: height,
           color: Colors.grey[200],
           child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
         );
@@ -1465,7 +1461,6 @@ class _NetworkImageWithFallback extends StatelessWidget {
           return Image.network(
             altUrl!,
             fit: BoxFit.cover,
-            height: height,
             width: double.infinity,
             errorBuilder: (c, e, s) => Container(
               color: Colors.grey[300],
@@ -1497,62 +1492,5 @@ class _PaymentBadge extends StatelessWidget {
       ),
       child: Text(label, style: const TextStyle(fontSize: 11, color: Colors.black54)),
     );
-  }
-}
-
-class _FooterOpeningHours extends StatelessWidget {
-  const _FooterOpeningHours({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-      Text('Opening Hours', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-      SizedBox(height: 12),
-      Text('❄️ Winter Break Closure Dates ❄️', style: TextStyle(fontStyle: FontStyle.italic)),
-      SizedBox(height: 8),
-      Text('Closing 4pm 19/12/2025', style: TextStyle(fontWeight: FontWeight.w700)),
-      Text('Reopening 10am 05/01/2026', style: TextStyle(fontWeight: FontWeight.w700)),
-      SizedBox(height: 8),
-      Text('Last post date: 12pm on 18/12/2025', style: TextStyle(fontWeight: FontWeight.w700)),
-      SizedBox(height: 12),
-      Text('-----------------------------'),
-      SizedBox(height: 8),
-      Text('(Term Time)', style: TextStyle(fontWeight: FontWeight.w700)),
-      SizedBox(height: 6),
-      Text('Monday - Friday 10am - 4pm'),
-      SizedBox(height: 8),
-      Text('(Outside of Term Time / Consolidation Weeks)'),
-      Text('Monday - Friday 10am - 3pm'),
-      SizedBox(height: 8),
-      Text('Purchase online 24/7', style: TextStyle(fontWeight: FontWeight.w700)),
-    ]);
-  }
-}
-
-class _FooterHelpAndSubscribeStacked extends StatelessWidget {
-  final VoidCallback onSubscribe;
-  const _FooterHelpAndSubscribeStacked({super.key, required this.onSubscribe});
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('Help and Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-      const SizedBox(height: 12),
-      TextButton(onPressed: () {}, style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: Colors.black87), child: const Text('Search')),
-      TextButton(onPressed: () {}, style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: Colors.black87), child: const Text('Terms & Conditions of Sale')),
-      TextButton(onPressed: () {}, style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: Colors.black87), child: const Text('Policy')),
-      const SizedBox(height: 12),
-      const Text('Latest Offers', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-      const SizedBox(height: 8),
-      Row(children: [
-        Expanded(
-          child: TextField(
-            decoration: InputDecoration(hintText: 'Email address', filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12), border: OutlineInputBorder(borderRadius: BorderRadius.circular(2))),
-          ),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4d2963), foregroundColor: Colors.white), child: const Text('SUBSCRIBE')),
-      ]),
-      const SizedBox(height: 8),
-      const Text('Sign up for exclusive offers and updates.'),
-    ]);
   }
 }
