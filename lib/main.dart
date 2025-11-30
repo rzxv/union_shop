@@ -211,6 +211,286 @@ class HomeScreen extends StatelessWidget {
             // Hero Section
             HeroCarousel(),
 
+            // Featured essentials Section
+            Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Text(
+                        'ESSENTIAL RANGE - OVER 20% OFF!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey[800],
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    LayoutBuilder(builder: (context, constraints) {
+                      final wide = constraints.maxWidth > 900;
+                      final columns = wide ? 2 : 1;
+                      return GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: columns,
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 48,
+                        childAspectRatio: 1.6,
+                        children: [
+                          // Product 1
+                          GestureDetector(
+                            onTap: () => navigateToProduct(context),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Image.network(
+                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (c, e, s) =>
+                                        Container(color: Colors.grey[300]),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Limited Edition Essential Zip Hoodies',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: const [
+                                    Text(
+                                      '£20.00',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      '£14.99',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF1E88E5),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Product 2
+                          GestureDetector(
+                            onTap: () => navigateToProduct(context),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Image.network(
+                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (c, e, s) =>
+                                        Container(color: Colors.grey[300]),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Essential T-Shirt',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: const [
+                                    Text(
+                                      '£10.00',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      '£6.99',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF1E88E5),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ),
+
+            // Signature range 
+            Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Text(
+                        'SIGNATURE RANGE',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey[800],
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    LayoutBuilder(builder: (context, constraints) {
+                      final wide = constraints.maxWidth > 900;
+                      final columns = wide ? 2 : 1;
+                      return GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: columns,
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 48,
+                        childAspectRatio: 1.6,
+                        children: [
+                          // Signature Product 1
+                          GestureDetector(
+                            onTap: () => navigateToProduct(context),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Image.network(
+                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (c, e, s) =>
+                                        Container(color: Colors.grey[300]),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Signature Hoodie',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: const [
+                                    Text(
+                                      '£35.00',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      '£29.99',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF1E88E5),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Signature Product 2
+                          GestureDetector(
+                            onTap: () => navigateToProduct(context),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Image.network(
+                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (c, e, s) =>
+                                        Container(color: Colors.grey[300]),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'Signature Cap',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: const [
+                                    Text(
+                                      '£12.00',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      '£9.99',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF1E88E5),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ),
+
             // Products Section
             Container(
               color: Colors.white,
