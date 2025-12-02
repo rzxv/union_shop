@@ -102,13 +102,23 @@ class AppHeader extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: LayoutBuilder(builder: (context, constraints) {
                 final isMobile = constraints.maxWidth < 700;
+                final double logoHeight = isMobile ? 40.0 : 72.0;
+
+                // Determine current route so we can mark the active nav item.
+                final String? currentRoute = ModalRoute.of(context)?.settings.name;
+                final bool isHomeRoute = currentRoute == '/';
+                final bool isAboutRoute = currentRoute == '/about';
+
+
+                final double centerShift = isMobile ? 0.0 : -80.0;
+
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Logo
                     ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 160,
+                      constraints: BoxConstraints(
+                        maxWidth: isMobile ? 160 : 280,
                         minWidth: 48,
                       ),
                       child: Padding(
@@ -117,13 +127,13 @@ class AppHeader extends StatelessWidget {
                           onTap: () => _navigateToHome(context),
                           child: Image.network(
                             'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
-                            height: 40,
+                            height: logoHeight,
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
                                 color: Colors.grey[200],
-                                width: 40,
-                                height: 40,
+                                width: logoHeight,
+                                height: logoHeight,
                                 child: const Icon(Icons.image_not_supported, color: Colors.grey),
                               );
                             },
@@ -147,72 +157,91 @@ class AppHeader extends StatelessWidget {
                               ),
                             )
                           : Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 700),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () => _navigateToHome(context),
-                                          style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                                            foregroundColor: Colors.black,
+                              child: Transform.translate(
+                                offset: Offset(centerShift, 0),
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxWidth: 700),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () => _navigateToHome(context),
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                                              foregroundColor: Colors.black,
+                                            ),
+                                            child: const Text('Home', style: TextStyle(fontSize: 16)),
                                           ),
-                                          child: const Text('Home', style: TextStyle(fontSize: 16)),
+                                          Container(
+                                            height: 2,
+                                            width: 36,
+                                            color: isHomeRoute ? Colors.black : Colors.transparent,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        onPressed: () {},
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          foregroundColor: Colors.black,
                                         ),
-                                        Container(height: 2, width: 36, color: Colors.black),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () {},
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        foregroundColor: Colors.black,
+                                        child: const Text('Shop', style: TextStyle(fontSize: 16)),
                                       ),
-                                      child: const Text('Shop', style: TextStyle(fontSize: 16)),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () {},
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        foregroundColor: Colors.black,
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        onPressed: () {},
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          foregroundColor: Colors.black,
+                                        ),
+                                        child: const Text('The Print Shack', style: TextStyle(fontSize: 16)),
                                       ),
-                                      child: const Text('The Print Shack', style: TextStyle(fontSize: 16)),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () {},
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        foregroundColor: Colors.black,
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        onPressed: () {},
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          foregroundColor: Colors.black,
+                                        ),
+                                        child: const Text('SALE!', style: TextStyle(fontSize: 16)),
                                       ),
-                                      child: const Text('SALE!', style: TextStyle(fontSize: 16)),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () => _navigateToAbout(context),
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        foregroundColor: Colors.black,
+                                      const SizedBox(width: 8),
+
+                                      // About 
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () => _navigateToAbout(context),
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                                              foregroundColor: Colors.black,
+                                            ),
+                                            child: const Text('About', style: TextStyle(fontSize: 16)),
+                                          ),
+                                          Container(
+                                            height: 2,
+                                            width: 48,
+                                            color: isAboutRoute ? Colors.black : Colors.transparent,
+                                          ),
+                                        ],
                                       ),
-                                      child: const Text('About', style: TextStyle(fontSize: 16)),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () {},
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        foregroundColor: Colors.black,
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        onPressed: () {},
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                          foregroundColor: Colors.black,
+                                        ),
+                                        child: const Text('UPSU.net', style: TextStyle(fontSize: 16)),
                                       ),
-                                      child: const Text('UPSU.net', style: TextStyle(fontSize: 16)),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -246,6 +275,8 @@ class AppHeader extends StatelessWidget {
                 );
               }),
             ),
+            // Thin divider at the bottom of the header
+            Container(height: 1, color: const Color(0xFFE0E0E0)),
           ],
         ),
       ],
@@ -263,7 +294,7 @@ class AppFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: const Color(0xFFFAFAFA),
+      color: const Color(0xFFF2F2F2),
       child: LayoutBuilder(builder: (context, constraints) {
         final w = constraints.maxWidth;
         final isMobile = w < 700;
