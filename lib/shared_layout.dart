@@ -5,8 +5,11 @@ class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
 
   void _openBurgerMenu(BuildContext context) {
+    final navigator = Navigator.of(context);
+
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       ),
@@ -19,13 +22,16 @@ class AppHeader extends StatelessWidget {
                 title: const Text('Home'),
                 onTap: () {
                   Navigator.pop(c);
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                  navigator.pushNamedAndRemoveUntil('/', (route) => false);
                 },
               ),
               ListTile(
                 title: const Text('Shop'),
                 onTap: () {
                   Navigator.pop(c);
+                  // Use navigator here (captured above) to avoid using the outer
+                  // BuildContext after the pop/async gap.
+                  Future.microtask(() => _showShopBottomSheetWithNavigator(navigator));
                 },
               ),
               ListTile(
@@ -44,7 +50,7 @@ class AppHeader extends StatelessWidget {
                 title: const Text('About'),
                 onTap: () {
                   Navigator.pop(c);
-                  Navigator.pushNamed(context, '/about');
+                  navigator.pushNamed('/about');
                 },
               ),
               ListTile(
@@ -58,6 +64,71 @@ class AppHeader extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _showShopBottomSheetWithNavigator(NavigatorState navigator) async {
+    showModalBottomSheet(
+      context: navigator.context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+                child: Row(
+                  children: const [
+                    Text('Shop', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              _sheetOption(ctx, 'Collections', Icons.list_alt, () {
+                Navigator.pop(ctx);
+                navigator.pushNamed('/collections');
+              }),
+              _sheetOption(ctx, 'Clothing', Icons.checkroom, () {
+                Navigator.pop(ctx);
+                navigator.pushNamed('/product');
+              }),
+              _sheetOption(ctx, 'Merchandise', Icons.widgets, () {
+                Navigator.pop(ctx);
+                navigator.pushNamed('/product');
+              }),
+              _sheetOption(ctx, 'Signature & Essential Range', Icons.star, () {
+                Navigator.pop(ctx);
+                navigator.pushNamed('/product');
+              }),
+              _sheetOption(ctx, 'Portsmouth City Collection', Icons.location_city, () {
+                Navigator.pop(ctx);
+                navigator.pushNamed('/product');
+              }),
+              _sheetOption(ctx, 'Graduation', Icons.school, () {
+                Navigator.pop(ctx);
+                navigator.pushNamed('/product');
+              }),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _sheetOption(BuildContext ctx, String title, IconData icon, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.black54),
+      title: Text(title),
+      onTap: onTap,
+      dense: true,
+      visualDensity: const VisualDensity(vertical: -2),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
     );
   }
 
@@ -96,23 +167,22 @@ class AppHeader extends StatelessWidget {
               height: 6,
               color: const Color(0xFF4d2963),
             ),
-            Container(
-              height: 96,
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: LayoutBuilder(builder: (context, constraints) {
-                final isMobile = constraints.maxWidth < 700;
-                final double logoHeight = isMobile ? 40.0 : 72.0;
+            LayoutBuilder(builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 700;
+              final double logoHeight = isMobile ? 40.0 : 72.0;
+              final double leftPad = 12.0;
+              final double rightPad = isMobile ? 6.0 : 12.0;
+              final double centerShift = isMobile ? 0.0 : -80.0;
+              // Determine current route so we can mark the active nav item.
+              final String? currentRoute = ModalRoute.of(context)?.settings.name;
+              final bool isHomeRoute = currentRoute == '/';
+              final bool isAboutRoute = currentRoute == '/about';
 
-                // Determine current route so we can mark the active nav item.
-                final String? currentRoute = ModalRoute.of(context)?.settings.name;
-                final bool isHomeRoute = currentRoute == '/';
-                final bool isAboutRoute = currentRoute == '/about';
-
-
-                final double centerShift = isMobile ? 0.0 : -80.0;
-
-                return Row(
+              return Container(
+                height: 96,
+                color: Colors.white,
+                padding: EdgeInsets.only(left: leftPad, right: rightPad),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Logo
@@ -122,7 +192,7 @@ class AppHeader extends StatelessWidget {
                         minWidth: 48,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        padding: const EdgeInsets.only(right: 8.0),
                         child: GestureDetector(
                           onTap: () => _navigateToHome(context),
                           child: Image.network(
@@ -142,20 +212,11 @@ class AppHeader extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(width: 8),
+                    if (!isMobile) const SizedBox(width: 8),
 
-                    // Center nav or burger
-                    Flexible(
-                      fit: FlexFit.loose,
+                    Expanded(
                       child: isMobile
-                          ? Align(
-                              alignment: Alignment.centerLeft,
-                              child: IconButton(
-                                icon: const Icon(Icons.menu, size: 28, color: Colors.black87),
-                                onPressed: () => _openBurgerMenu(context),
-                                padding: const EdgeInsets.all(6),
-                              ),
-                            )
+                          ? const SizedBox.shrink()
                           : Center(
                               child: Transform.translate(
                                 offset: Offset(centerShift, 0),
@@ -184,14 +245,107 @@ class AppHeader extends StatelessWidget {
                                         ],
                                       ),
                                       const SizedBox(width: 8),
-                                      TextButton(
-                                        onPressed: () {},
-                                        style: TextButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                                          foregroundColor: Colors.black,
+
+                                      PopupMenuButton<String>(
+                                        offset: const Offset(0, 56),
+                                        color: Colors.white,
+                                        elevation: 6,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                        child: const Text('Shop', style: TextStyle(fontSize: 16)),
+                                        onSelected: (value) {
+                                          if (value == 'collections') {
+                                            Navigator.pushNamed(context, '/collections');
+                                          } else {
+                                            Navigator.pushNamed(context, '/product');
+                                          }
+                                        },
+                                        itemBuilder: (ctx) {
+                                          final screenW = MediaQuery.of(ctx).size.width;
+                                          final menuWidth = screenW > 1000 ? 320.0 : 300.0;
+                                          return [
+                                            PopupMenuItem(
+                                              value: 'clothing',
+                                              child: SizedBox(
+                                                width: menuWidth,
+                                                child: ListTile(
+                                                  leading: const Icon(Icons.checkroom, color: Colors.black54),
+                                                  title: const Text('Clothing'),
+                                                  contentPadding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'merchandise',
+                                              child: SizedBox(
+                                                width: menuWidth,
+                                                child: ListTile(
+                                                  leading: const Icon(Icons.widgets, color: Colors.black54),
+                                                  title: const Text('Merchandise'),
+                                                  contentPadding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'signature',
+                                              child: SizedBox(
+                                                width: menuWidth,
+                                                child: ListTile(
+                                                  leading: const Icon(Icons.star, color: Colors.black54),
+                                                  title: const Text('Signature & Essential Range'),
+                                                  contentPadding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'portsmouth',
+                                              child: SizedBox(
+                                                width: menuWidth,
+                                                child: ListTile(
+                                                  leading: const Icon(Icons.location_city, color: Colors.black54),
+                                                  title: const Text('Portsmouth City Collection'),
+                                                  contentPadding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'graduation',
+                                              child: SizedBox(
+                                                width: menuWidth,
+                                                child: ListTile(
+                                                  leading: const Icon(Icons.school, color: Colors.black54),
+                                                  title: const Text('Graduation 🎓'),
+                                                  contentPadding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                            const PopupMenuDivider(),
+                                            PopupMenuItem(
+                                              value: 'collections',
+                                              child: SizedBox(
+                                                width: menuWidth,
+                                                child: ListTile(
+                                                  title: const Text('Collections'),
+                                                  trailing: const Icon(Icons.arrow_forward, color: Colors.black54),
+                                                  contentPadding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            ),
+                                          ];
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: const [
+                                              Text('Shop', style: TextStyle(fontSize: 16, color: Colors.black)),
+                                              SizedBox(width: 4),
+                                              Icon(Icons.arrow_drop_down, size: 20, color: Colors.black54),
+                                            ],
+                                          ),
+                                        ),
                                       ),
+
                                       const SizedBox(width: 8),
                                       TextButton(
                                         onPressed: () {},
@@ -212,7 +366,7 @@ class AppHeader extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 8),
 
-                                      // About 
+                                      // About
                                       Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -247,7 +401,6 @@ class AppHeader extends StatelessWidget {
                             ),
                     ),
 
-                    // Right-side icons
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -269,12 +422,20 @@ class AppHeader extends StatelessWidget {
                           constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                           onPressed: () {},
                         ),
+                        // On mobile place the burger/menu button at the very right
+                        if (isMobile)
+                          IconButton(
+                            icon: const Icon(Icons.menu, size: 28, color: Colors.black87),
+                            padding: const EdgeInsets.all(6),
+                            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                            onPressed: () => _openBurgerMenu(context),
+                          ),
                       ],
                     ),
                   ],
-                );
-              }),
-            ),
+                ),
+              );
+            }),
             // Thin divider at the bottom of the header
             Container(height: 1, color: const Color(0xFFE0E0E0)),
           ],
