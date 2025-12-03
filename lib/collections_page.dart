@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/shared_layout.dart';
 
 class CollectionsPage extends StatelessWidget {
-  const CollectionsPage({super.key});
+  final Widget? header;
+  final Widget? footer;
+
+  const CollectionsPage({super.key, this.header, this.footer});
 
   // Dummy collections data
   static final List<Map<String, String>> _collections = [
@@ -33,7 +36,7 @@ class CollectionsPage extends StatelessWidget {
   ];
 
   void _openCollection(BuildContext context, Map<String, String> collection) {
-    // For now navigate to the existing /product page.
+    // For now navigate to the existing /product page as requested.
     // In future you can pass collection info via arguments:
     // Navigator.pushNamed(context, '/product', arguments: collection);
     Navigator.pushNamed(context, '/product');
@@ -45,7 +48,7 @@ class CollectionsPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AppHeader(),
+            header ?? const AppHeader(),
             Container(
               width: double.infinity,
               color: Colors.white,
@@ -99,10 +102,8 @@ class CollectionsPage extends StatelessWidget {
                                   Image.network(
                                     item['image']!,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (c, e, s) =>
-                                        Container(color: Colors.grey[300]),
+                                    errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
                                   ),
-                                  // Use Color.fromRGBO instead of the deprecated withOpacity
                                   Container(color: const Color.fromRGBO(0, 0, 0, 0.45)),
                                   Center(
                                     child: Padding(
@@ -137,7 +138,7 @@ class CollectionsPage extends StatelessWidget {
                 ),
               ),
             ),
-            const AppFooter(),
+            footer ?? const AppFooter(),
           ],
         ),
       ),
