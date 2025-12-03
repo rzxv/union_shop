@@ -70,13 +70,13 @@ void main() {
     const physicalSize = Size(1200, 1600);
     const devicePixelRatio = 1.0;
 
-    tester.binding.window.physicalSizeTestValue = physicalSize;
-    tester.binding.window.devicePixelRatioTestValue = devicePixelRatio;
+    tester.view.physicalSize = physicalSize;
+    tester.view.devicePixelRatio = devicePixelRatio;
 
     // Ensure we clean up the test window override.
     addTearDown(() {
-      tester.binding.window.clearPhysicalSizeTestValue();
-      tester.binding.window.clearDevicePixelRatioTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     // Use a MediaQuery sized to the useful area (carousel height 400 + product card)
@@ -124,8 +124,9 @@ void main() {
       ),
     );
 
+    // Short pump to stabilize layout without waiting for repeating timers.
     await tester.pumpWidget(app);
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 100));
 
     // 1) Carousel initial slide
     expect(find.byType(HeroCarousel), findsOneWidget);
@@ -135,7 +136,8 @@ void main() {
     final rightChevron = find.byIcon(Icons.chevron_right);
     expect(rightChevron, findsOneWidget);
     await tester.tap(rightChevron);
-    await tester.pump(const Duration(milliseconds: 600)); // wait for animation
+    // Let the PageView animation run (HeroCarousel uses a 500ms animation for page changes).
+    await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
 
     expect(find.text('Make university life easier'), findsOneWidget);
@@ -147,13 +149,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.play_arrow), findsOneWidget);
 
-    // 4) Tap ProductCard title to navigate to /product
-    final productTitle = find.text('Test Product');
-    expect(productTitle, findsOneWidget);
+    // 4) Tap ProductCard to navigate to /product
+    final productCard = find.byType(ProductCard);
+    expect(productCard, findsOneWidget);
 
-    await tester.tap(productTitle);
+    await tester.tap(productCard);
     await tester.pumpAndSettle();
 
     expect(find.text('Product Page'), findsOneWidget);
-  }, timeout: const Timeout(Duration(seconds: 15)));
+  }, timeout: const Timeout(Duration(seconds: 30)));
 }

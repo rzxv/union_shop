@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/shared_layout.dart';
+import 'package:union_shop/autumn_collection.dart';
 
 class CollectionsPage extends StatelessWidget {
-  final Widget? header;
-  final Widget? footer;
+  final Widget header;
+  final Widget footer;
 
-  const CollectionsPage({super.key, this.header, this.footer});
+  const CollectionsPage({
+    super.key,
+    this.header = const AppHeader(),
+    this.footer = const AppFooter(),
+  });
 
   // Dummy collections data
   static final List<Map<String, String>> _collections = [
@@ -36,10 +41,16 @@ class CollectionsPage extends StatelessWidget {
   ];
 
   void _openCollection(BuildContext context, Map<String, String> collection) {
-    // For now navigate to the existing /product page as requested.
-    // In future you can pass collection info via arguments:
-    // Navigator.pushNamed(context, '/product', arguments: collection);
-    Navigator.pushNamed(context, '/product');
+    final title = (collection['title'] ?? '').trim();
+    if (title == 'Autumn Favourites') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (ctx) => const AutumnCollection()),
+      );
+    } else {
+      // Keep the previous behaviour for other collections
+      Navigator.pushNamed(context, '/product');
+    }
   }
 
   @override
@@ -48,7 +59,7 @@ class CollectionsPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            header ?? const AppHeader(),
+            header,
             Container(
               width: double.infinity,
               color: Colors.white,
@@ -138,7 +149,7 @@ class CollectionsPage extends StatelessWidget {
                 ),
               ),
             ),
-            footer ?? const AppFooter(),
+            footer,
           ],
         ),
       ),
