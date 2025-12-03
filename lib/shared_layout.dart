@@ -168,7 +168,7 @@ class AppHeader extends StatelessWidget {
               color: const Color(0xFF4d2963),
             ),
             LayoutBuilder(builder: (context, constraints) {
-              final isMobile = constraints.maxWidth < 700;
+              final isMobile = constraints.maxWidth <= 700; 
               final double logoHeight = isMobile ? 40.0 : 72.0;
               final double leftPad = 12.0;
               final double rightPad = isMobile ? 6.0 : 12.0;
