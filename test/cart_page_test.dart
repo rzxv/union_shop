@@ -13,9 +13,9 @@ void main() {
 
     testWidgets('shows items, can change qty and remove, checkout clears cart', (tester) async {
       await mockNetworkImagesFor(() async {
-        // populate cart
-        globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S'));
-        globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2));
+  // populate cart
+  globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S', price: 12.5));
+  globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2, price: 7.0));
 
         // Instead of navigating via the shared header (which is complex in
         // tests), just pump the CartPage directly and provide a minimal
@@ -39,7 +39,8 @@ void main() {
         final p1Key = globalCart.items.first.key; // p1
         final inc = find.byKey(ValueKey('inc-$p1Key'));
         expect(inc, findsOneWidget);
-        await tester.tap(inc);
+  await tester.ensureVisible(inc);
+  await tester.tap(inc);
         await tester.pumpAndSettle();
         expect(globalCart.totalItems, 4); // was 3, p1 incremented to 2 -> total 4
 
@@ -47,15 +48,17 @@ void main() {
         final p2Key = globalCart.items.firstWhere((it) => it.id == 'p2').key;
         final remove = find.byKey(ValueKey('remove-$p2Key'));
         expect(remove, findsOneWidget);
-        await tester.tap(remove);
+  await tester.ensureVisible(remove);
+  await tester.tap(remove);
         await tester.pumpAndSettle();
         expect(globalCart.items.any((it) => it.id == 'p2'), isFalse);
 
         // Checkout clears cart and shows dialog
         final checkout = find.byKey(const ValueKey('checkout'));
         expect(checkout, findsOneWidget);
-        await tester.tap(checkout);
-        await tester.pumpAndSettle();
+  await tester.ensureVisible(checkout);
+  await tester.tap(checkout);
+  await tester.pumpAndSettle();
 
   // Navigated to order confirmation
   await tester.pumpAndSettle();

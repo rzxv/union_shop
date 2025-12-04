@@ -16,7 +16,7 @@ class CartItem {
     this.size = '',
     this.image,
     this.quantity = 1,
-    this.price = 0.0,
+    required this.price,
   });
 
   String get key => '$id|$color|$size';

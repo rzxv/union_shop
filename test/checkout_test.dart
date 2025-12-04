@@ -16,8 +16,8 @@ void main() {
     testWidgets('placing an order clears cart and records an order', (tester) async {
       await mockNetworkImagesFor(() async {
         // populate cart
-        globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S'));
-        globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2));
+  globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S', price: 11.0));
+  globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2, price: 6.5));
 
         await tester.pumpWidget(MaterialApp(
           routes: {
@@ -35,10 +35,11 @@ void main() {
         expect(globalOrders.orders, isEmpty);
 
         // Tap checkout
-        final checkout = find.byKey(const ValueKey('checkout'));
-        expect(checkout, findsOneWidget);
-        await tester.tap(checkout);
-        await tester.pumpAndSettle();
+  final checkout = find.byKey(const ValueKey('checkout'));
+  expect(checkout, findsOneWidget);
+  await tester.ensureVisible(checkout);
+  await tester.tap(checkout);
+  await tester.pumpAndSettle();
 
   // Should navigate to Order Confirmation page
   await tester.pumpAndSettle();

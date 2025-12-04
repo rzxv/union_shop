@@ -6,7 +6,9 @@ class ProductPage extends StatefulWidget {
   final Widget header;
   final Widget footer;
 
-  const ProductPage({super.key, this.header = const AppHeader(), this.footer = const AppFooter()});
+  final double price;
+
+  const ProductPage({super.key, this.header = const AppHeader(), this.footer = const AppFooter(), this.price = 23.0});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -36,6 +38,7 @@ class _ProductPageState extends State<ProductPage> {
       size: _selectedSize,
       image: _images.isNotEmpty ? _images[_currentImage] : null,
       quantity: _quantity,
+      price: widget.price,
     );
     globalCart.add(item);
   }
@@ -158,7 +161,7 @@ class _ProductPageState extends State<ProductPage> {
                                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
                                   ),
                                   const SizedBox(height: 8),
-                                  const Text('£23.00', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                                  Text('£${widget.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                                   const SizedBox(height: 6),
                                   Text('Tax included.', style: TextStyle(color: Colors.grey[600])),
                                   const SizedBox(height: 20),
@@ -415,7 +418,7 @@ class _ProductPageState extends State<ProductPage> {
                             const SizedBox(height: 16),
                             const Text('Classic Sweatshirts', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                             const SizedBox(height: 8),
-                            const Text('£23.00', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                            Text('£${widget.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                             const SizedBox(height: 6),
                             Text('Tax included.', style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 16),
