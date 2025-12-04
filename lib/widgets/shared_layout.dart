@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/pages/sale_collection.dart';
 
 /// Shared header used across pages.
 class AppHeader extends StatelessWidget {
@@ -45,6 +46,9 @@ class AppHeader extends StatelessWidget {
                 title: const Text('SALE!'),
                 onTap: () {
                   Navigator.pop(c);
+                  // Push the Sale collection using the captured navigator so
+                  // we don't use the bottom-sheet context after pop.
+                  Future.microtask(() => navigator.push(MaterialPageRoute(builder: (_) => const SaleCollection())));
                 },
               ),
               ListTile(
@@ -358,7 +362,7 @@ class AppHeader extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 8),
                                       TextButton(
-                                        onPressed: () {},
+                                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SaleCollection())),
                                         style: TextButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(horizontal: 12),
                                           foregroundColor: Colors.black,
