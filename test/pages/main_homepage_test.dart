@@ -151,10 +151,12 @@ void main() {
     expect(find.byIcon(Icons.play_arrow), findsOneWidget);
 
     // 4) Tap ProductCard to navigate to /product
-    final productCard = find.byType(ProductCard);
-    expect(productCard, findsOneWidget);
+  final productCard = find.byType(ProductCard);
+  expect(productCard, findsOneWidget);
 
-    await tester.tap(productCard);
+  // Tap the product title text to avoid hit-test issues caused by layout
+  // changes that may place the center of the ProductCard under overlays.
+  await tester.tap(find.text('Test Product'));
     await tester.pumpAndSettle();
 
   expect(find.text('Product Page'), findsOneWidget);
