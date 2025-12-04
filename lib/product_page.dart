@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/shared_layout.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  final Widget header;
+  final Widget footer;
+
+  const ProductPage({super.key, this.header = const AppHeader(), this.footer = const AppFooter()});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -51,7 +54,7 @@ class _ProductPageState extends State<ProductPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AppHeader(),
+            widget.header,
 
             // Product details content
             Container(
@@ -375,7 +378,7 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ),
 
-            const AppFooter(),
+            widget.footer,
           ],
         ),
       ),

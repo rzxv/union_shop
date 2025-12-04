@@ -33,7 +33,9 @@ class UnionShopApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final Widget header;
+
+  const HomeScreen({super.key, this.header = const AppHeader()});
 
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -53,7 +55,7 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AppHeader(),
+            header,
 
             // Hero Section (unchanged)
             HeroCarousel(),

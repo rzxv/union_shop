@@ -75,11 +75,11 @@ void main() {
   testWidgets('Tapping a non-Autumn collection navigates to /product', (WidgetTester tester) async {
     const testSize = Size(1200, 800);
     // Force test window size so responsive layouts render the desktop layout.
-    tester.binding.window.physicalSizeTestValue = testSize;
-    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.view.physicalSize = testSize;
+    tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
-      tester.binding.window.clearPhysicalSizeTestValue();
-      tester.binding.window.clearDevicePixelRatioTestValue();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     final app = MaterialApp(
