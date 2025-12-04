@@ -1041,7 +1041,7 @@ class ProductCard extends StatelessWidget {
               ] else ...[
                 Text(
                   displayPrice,
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  style: const TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w700),
                   textAlign: center ? TextAlign.center : TextAlign.start,
                 ),
               ],
