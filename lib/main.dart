@@ -196,35 +196,11 @@ class HomeScreen extends StatelessWidget {
                           MediaQuery.of(context).size.width > 600 ? 2 : 1,
                       crossAxisSpacing: 24,
                       mainAxisSpacing: 48,
-                      children: const [
-                        ProductCard(
-                          productId: 'placeholder_1',
-                          title: 'Placeholder Product 1',
-                          price: '£10.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          productId: 'placeholder_2',
-                          title: 'Placeholder Product 2',
-                          price: '£15.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          productId: 'placeholder_3',
-                          title: 'Placeholder Product 3',
-                          price: '£20.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          productId: 'placeholder_4',
-                          title: 'Placeholder Product 4',
-                          price: '£25.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
+                      children: [
+                        ProductCard(productId: 'nujabes_vinyl', center: true),
+                        ProductCard(productId: 'radiohead_vinyl', center: true),
+                        ProductCard(productId: 'autumn_hoodie_1', center: true),
+                        ProductCard(productId: 'autumn_accessory_3', center: true),
                       ],
                     ),
                   
@@ -988,6 +964,7 @@ class ProductCard extends StatelessWidget {
   final String? title;
   final String? price;
   final String? imageUrl;
+  final bool center;
 
   const ProductCard({
     super.key,
@@ -995,13 +972,17 @@ class ProductCard extends StatelessWidget {
     this.title,
     this.price,
     this.imageUrl,
+    this.center = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final Product? prod = (productId != null && productRegistry.containsKey(productId)) ? productRegistry[productId] : null;
     final displayTitle = prod?.title ?? title ?? 'Product';
-    final displayPrice = prod != null ? '£${prod.price.toStringAsFixed(2)}' : (price ?? '');
+    final originalPrice = prod != null ? prod.price : (price != null && price!.isNotEmpty ? double.tryParse(price!.replaceAll('£', '')) : null);
+    final sale = prod?.salePrice;
+    final displayPrice = originalPrice != null ? '£${originalPrice.toStringAsFixed(2)}' : (price ?? '');
+    final displaySalePrice = sale != null ? '£${sale.toStringAsFixed(2)}' : null;
     final displayImage = prod?.images.isNotEmpty == true ? prod!.images.first : (imageUrl ?? '');
 
     return GestureDetector(
@@ -1009,7 +990,7 @@ class ProductCard extends StatelessWidget {
         if (productId != null) Navigator.pushNamed(context, '/product', arguments: productId);
       },
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           // Enforce a consistent aspect ratio for product images so the
           // Essential Range grid shows uniform thumbnails.
@@ -1034,19 +1015,36 @@ class ProductCard extends StatelessWidget {
                 : AspectRatio(aspectRatio: 4 / 3, child: Container(color: Colors.grey[300])),
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 4),
               Text(
                 displayTitle,
                 style: const TextStyle(fontSize: 14, color: Colors.black),
                 maxLines: 2,
+                textAlign: center ? TextAlign.center : TextAlign.start,
               ),
-              const SizedBox(height: 4),
-              Text(
-                displayPrice,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-              ),
+              const SizedBox(height: 6),
+              // Price area: show sale price if available, otherwise regular price.
+              if (displaySalePrice != null) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(displayPrice, style: const TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey, fontSize: 13)),
+                    const SizedBox(width: 8),
+                    Text(displaySalePrice, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w700, fontSize: 13)),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                // Small discount badge (consistent with Sale page messaging)
+                Text('35% off', style: TextStyle(color: Colors.red[700], fontSize: 12, fontWeight: FontWeight.w700)),
+              ] else ...[
+                Text(
+                  displayPrice,
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  textAlign: center ? TextAlign.center : TextAlign.start,
+                ),
+              ],
             ],
           ),
         ],

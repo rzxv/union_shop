@@ -197,8 +197,4 @@ const Map<String, Product> productRegistry = {
     colors: ['Black'],
     description: 'Gatefold vinyl pressing of OK Computer — heavyweight vinyl with restored artwork and inner sleeve.',
   ),
-  'placeholder_1': Product(id: 'placeholder_1', title: 'Placeholder Product 1', price: 10.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),
-  'placeholder_2': Product(id: 'placeholder_2', title: 'Placeholder Product 2', price: 15.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),
-  'placeholder_3': Product(id: 'placeholder_3', title: 'Placeholder Product 3', price: 20.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),
-  'placeholder_4': Product(id: 'placeholder_4', title: 'Placeholder Product 4', price: 25.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),
 };
