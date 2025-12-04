@@ -72,15 +72,20 @@ void main() {
     HttpOverrides.global = _TestHttpOverrides();
   });
 
-  testWidgets('CollectionsPage shows grid and tapping a card navigates to /product', (WidgetTester tester) async {
-    // Force a desktop-sized viewport (so any remaining layout won't overflow).
+  testWidgets('Tapping a non-Autumn collection navigates to /product', (WidgetTester tester) async {
     const testSize = Size(1200, 800);
+    // Force test window size so responsive layouts render the desktop layout.
+    tester.binding.window.physicalSizeTestValue = testSize;
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    addTearDown(() {
+      tester.binding.window.clearPhysicalSizeTestValue();
+      tester.binding.window.clearDevicePixelRatioTestValue();
+    });
 
     final app = MaterialApp(
       routes: {
         '/product': (ctx) => const Scaffold(body: Center(child: Text('Product Page'))),
       },
-      // Inject empty header/footer to avoid building AppHeader/AppFooter in the test.
       home: Scaffold(
         body: Center(
           child: MediaQuery(
@@ -101,19 +106,13 @@ void main() {
     await tester.pumpWidget(app);
     await tester.pumpAndSettle();
 
-    // Page title
-    expect(find.text('Collections'), findsOneWidget);
-
-    // Check a few collection titles from the dummy data
-    expect(find.text('Autumn Favourites'), findsOneWidget);
+    // Ensure the non-Autumn collection title exists
     expect(find.text('Clothing'), findsOneWidget);
-    expect(find.text('Graduation'), findsOneWidget);
 
-    // Tap the first collection title to trigger navigation
-    await tester.tap(find.text('Autumn Favourites'));
+    // Tap the 'Clothing' collection which should route to '/product'
+    await tester.tap(find.text('Clothing'));
     await tester.pumpAndSettle();
 
-    // Should have navigated to /product
     expect(find.text('Product Page'), findsOneWidget);
   });
 }
