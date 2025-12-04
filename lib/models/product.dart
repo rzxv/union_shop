@@ -120,6 +120,72 @@ const Map<String, Product> productRegistry = {
     colors: ['Burnt Orange'],
     description: 'Lightweight woven scarf with autumnal colours — an easy way to add warmth and texture to an outfit.',
   ),
+  // Sale collection - 6 curated physical releases (CD & Vinyl)
+  // NUJABES
+  'nujabes_cd': Product(
+    id: 'nujabes_cd',
+    title: 'Nujabes — Luv(sic) (CD)',
+    price: 19.99,
+    images: [
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881901/nujabes_cd_riq9rg.jpg',
+    ],
+    colors: ['Black'],
+    description: 'Classic Nujabes release on CD — lush instrumentals and soulful samples, remastered for clear listening.',
+  ),
+  'nujabes_vinyl': Product(
+    id: 'nujabes_vinyl',
+    title: 'Nujabes — Metaphorical Music (Vinyl)',
+    price: 34.99,
+    images: [
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881919/nujabes_vinyl_xmhn2n.webp',
+    ],
+    colors: ['Black'],
+    description: 'Limited vinyl pressing of Nujabes — warm analogue mastering, perfect for collectors and vinyl lovers.',
+  ),
+
+  // MASS OF THE FERMENTING DREGS
+  'motfd_cd': Product(
+    id: 'motfd_cd',
+    title: 'Mass of the Fermenting Dregs - World is yours (CD)',
+    price: 18.99,
+    images: [
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881769/motfd_cd_rkep9j.avif',
+    ],
+    colors: ['Black'],
+    description: 'Live Sessions on CD — an energetic capture of the band’s raw live performances and fan favourites.',
+  ),
+  'motfd_vinyl': Product(
+    id: 'motfd_vinyl',
+    title: 'Mass of the Fermenting Dregs — Kirametal (Vinyl)',
+    price: 29.99,
+    images: [
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881772/motfd_vinyl_yslxsj.webp',
+    ],
+    colors: ['Black'],
+    description: 'Live Sessions double-LP — gatefold vinyl with live photos and liner notes.',
+  ),
+
+  // RADIOHEAD
+  'radiohead_cd': Product(
+    id: 'radiohead_cd',
+    title: 'Radiohead — In rainbows (CD)',
+    price: 19.99,
+    images: [
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882065/radiohead_cd_gagyat.webp',
+    ],
+    colors: ['Black'],
+    description: 'Remastered CD edition of In rainbows — essential listening with expanded liner notes.',
+  ),
+  'radiohead_vinyl': Product(
+    id: 'radiohead_vinyl',
+    title: 'Radiohead — OK Computer (Vinyl)',
+    price: 34.99,
+    images: [
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882069/radiohead_vinyl_wo2j2n.webp',
+    ],
+    colors: ['Black'],
+    description: 'Gatefold vinyl pressing of OK Computer — heavyweight vinyl with restored artwork and inner sleeve.',
+  ),
   'placeholder_1': Product(id: 'placeholder_1', title: 'Placeholder Product 1', price: 10.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),
   'placeholder_2': Product(id: 'placeholder_2', title: 'Placeholder Product 2', price: 15.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),
   'placeholder_3': Product(id: 'placeholder_3', title: 'Placeholder Product 3', price: 20.0, images: ['https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282'], description: 'Placeholder description.'),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/shared_layout.dart';
 import 'package:union_shop/pages/autumn_collection.dart';
+import 'package:union_shop/pages/sale_collection.dart';
 
 class CollectionsPage extends StatelessWidget {
   final Widget header;
@@ -19,8 +20,8 @@ class CollectionsPage extends StatelessWidget {
       'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764876698/autumn_collection_dhyehz.png',
     },
     {
-      'title': 'Black Friday',
-      'image': 'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+      'title': 'Music Sale collection',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882182/musicsalecollection_bibsom.jpg',
     },
     {
       'title': 'Clothing',
@@ -46,6 +47,11 @@ class CollectionsPage extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (ctx) => const AutumnCollection()),
+      );
+    } else if (title == 'Music Sale collection') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (ctx) => const SaleCollection()),
       );
     } else {
       // Keep the previous behaviour for other collections
