@@ -7,6 +7,7 @@ class CartItem {
   final String size;
   final String? image;
   int quantity;
+  final double price;
 
   CartItem({
     required this.id,
@@ -15,6 +16,7 @@ class CartItem {
     this.size = '',
     this.image,
     this.quantity = 1,
+    this.price = 0.0,
   });
 
   String get key => '$id|$color|$size';
