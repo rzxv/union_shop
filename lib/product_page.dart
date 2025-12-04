@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/shared_layout.dart';
 import 'package:union_shop/cart.dart';
+import 'package:union_shop/product.dart';
 
 class ProductPage extends StatefulWidget {
   final Widget header;
   final Widget footer;
 
+  /// Optional product object — if supplied, the page will render the product
+  /// data (title, price, images). If omitted the page falls back to the
+  /// existing defaults and the `price` parameter.
+  final Product? product;
+
   final double price;
 
-  const ProductPage({super.key, this.header = const AppHeader(), this.footer = const AppFooter(), this.price = 23.0});
+  const ProductPage({super.key, this.header = const AppHeader(), this.footer = const AppFooter(), this.price = 23.0, this.product});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -18,10 +24,9 @@ class _ProductPageState extends State<ProductPage> {
   String _selectedColor = 'Black';
   String _selectedSize = 'S';
   int _quantity = 1;
-
-  final List<String> _colors = ['Black', 'Purple', 'Grey'];
-  final List<String> _sizes = ['S', 'M', 'L', 'XL'];
-  final List<String> _images = [
+  List<String> _colors = ['Black', 'Purple', 'Grey'];
+  List<String> _sizes = ['S', 'M', 'L', 'XL'];
+  List<String> _images = [
     'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
     'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
     'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
@@ -32,13 +37,13 @@ class _ProductPageState extends State<ProductPage> {
 
   void _addToCart() {
     final item = CartItem(
-      id: 'classic_sweatshirt',
-      title: 'Classic Sweatshirts',
+      id: widget.product?.id ?? 'classic_sweatshirt',
+      title: widget.product?.title ?? 'Classic Sweatshirts',
       color: _selectedColor,
       size: _selectedSize,
       image: _images.isNotEmpty ? _images[_currentImage] : null,
       quantity: _quantity,
-      price: widget.price,
+      price: widget.product?.price ?? widget.price,
     );
     globalCart.add(item);
   }
@@ -50,8 +55,19 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
+    // If a Product was passed in, use its data to populate images, price and
+    // variants. This keeps the page backwards-compatible with tests that
+    // construct ProductPage() directly.
+    if (widget.product != null) {
+      final p = widget.product!;
+      if (p.images.isNotEmpty) _images = p.images;
+      if (p.colors.isNotEmpty) _colors = p.colors;
+      if (p.sizes.isNotEmpty) _sizes = p.sizes;
+    }
     // Ensure selected color maps to first image initially
     _selectedColor = _colors.isNotEmpty ? _colors[0] : _selectedColor;
+    // Also initialize selected size from product if available
+    _selectedSize = _sizes.isNotEmpty ? _sizes[0] : _selectedSize;
   }
 
   @override
@@ -62,6 +78,9 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+  // Use single description field from Product. Keep the previous combined
+  // fallback text so UX remains unchanged when no product is supplied.
+  final _description = widget.product?.description ?? 'Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.\n\nSoft, comfortable, 50% cotton and 50% polyester.';
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -156,12 +175,12 @@ class _ProductPageState extends State<ProductPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Classic Sweatshirts',
-                                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
+                                  Text(
+                                    widget.product?.title ?? 'Classic Sweatshirts',
+                                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text('£${widget.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                                  Text('£${(widget.product?.price ?? widget.price).toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                                   const SizedBox(height: 6),
                                   Text('Tax included.', style: TextStyle(color: Colors.grey[600])),
                                   const SizedBox(height: 20),
@@ -290,12 +309,6 @@ class _ProductPageState extends State<ProductPage> {
 
                                   const SizedBox(height: 16),
 
-                                  // Student instruction (tests expect this exact string)
-                                  const Text(
-                                    'Students should add size options, colour options, quantity selector, add to cart button, and buy now button here.',
-                                    style: TextStyle(color: Colors.black54),
-                                  ),
-
                                   const SizedBox(height: 8),
 
                                   // Add to cart (outlined) and Buy button
@@ -329,13 +342,8 @@ class _ProductPageState extends State<ProductPage> {
                                   TextButton(onPressed: () {}, child: const Text('More payment options')),
 
                                   const SizedBox(height: 20),
-                                  const Text(
-                                    'Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.',
-                                    style: TextStyle(color: Colors.grey, height: 1.6),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  const Text(
-                                    'Soft, comfortable, 50% cotton and 50% polyester.',
+                                  Text(
+                                    _description,
                                     style: TextStyle(color: Colors.grey, height: 1.6),
                                   ),
 
@@ -416,9 +424,9 @@ class _ProductPageState extends State<ProductPage> {
                             ),
 
                             const SizedBox(height: 16),
-                            const Text('Classic Sweatshirts', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
+                            Text(widget.product?.title ?? 'Classic Sweatshirts', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                             const SizedBox(height: 8),
-                            Text('£${widget.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                            Text('£${(widget.product?.price ?? widget.price).toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                             const SizedBox(height: 6),
                             Text('Tax included.', style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 16),
@@ -621,12 +629,6 @@ class _ProductPageState extends State<ProductPage> {
 
                             const SizedBox(height: 16),
 
-                            // Student instruction kept in desktop only, but keep an abbreviated helper for mobile
-                            const Text(
-                              'Students should add size options, colour options, quantity selector, add to cart button, and buy now button here.',
-                              style: TextStyle(color: Colors.black54),
-                            ),
-
                             const SizedBox(height: 12),
 
                             // Add to cart and Buy buttons (full width)
@@ -662,13 +664,8 @@ class _ProductPageState extends State<ProductPage> {
                             TextButton(onPressed: () {}, child: const Text('More payment options')),
 
                             const SizedBox(height: 20),
-                            const Text(
-                              'Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.',
-                              style: TextStyle(color: Colors.grey, height: 1.6),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Soft, comfortable, 50% cotton and 50% polyester.',
+                            Text(
+                              _description,
                               style: TextStyle(color: Colors.grey, height: 1.6),
                             ),
 

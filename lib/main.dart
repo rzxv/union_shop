@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/about.dart';
 import 'package:union_shop/product_page.dart';
+import 'package:union_shop/product.dart';
 import 'package:union_shop/shared_layout.dart';
 import 'package:union_shop/collections_page.dart';
 import 'package:union_shop/cart_page.dart';
@@ -27,7 +28,11 @@ class UnionShopApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
   '/cart': (context) => CartPage(),
-        '/product': (context) => const ProductPage(),
+        '/product': (context) {
+          final id = ModalRoute.of(context)!.settings.arguments as String?;
+          final prod = id != null && productRegistry.containsKey(id) ? productRegistry[id] : null;
+          return ProductPage(product: prod);
+        },
         '/about': (context) => const AboutPage(),
         '/collections': (context) => const CollectionsPage(),
         '/order-confirmation': (context) {
@@ -70,137 +75,48 @@ class HomeScreen extends StatelessWidget {
             // Featured essentials Section
             Container(
               color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 40.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: Text(
-                        'ESSENTIAL RANGE - OVER 20% OFF!',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey[800],
-                          letterSpacing: 1.5,
+              child: Center(
+                child: ConstrainedBox(
+                  // slightly wider so product cards appear larger on desktop
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 40.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Center(
+                          child: Text(
+                            'ESSENTIAL RANGE',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey[800],
+                              letterSpacing: 1.5,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 48),
+                        LayoutBuilder(builder: (context, constraints) {
+                          final wide = constraints.maxWidth > 900;
+                          final columns = wide ? 2 : 1;
+                          final childAspect = wide ? 1.45 : 1.6; // slightly taller on desktop
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: columns,
+                            crossAxisSpacing: 24,
+                            mainAxisSpacing: 48,
+                            childAspectRatio: childAspect,
+                            children: [
+                              // Use ProductCard backed by productRegistry so updates live in lib/product.dart
+                              Center(child: ProductCard(productId: 'limited_essential_zip_hoodie')),
+                              Center(child: ProductCard(productId: 'essential_tshirt')),
+                            ],
+                          );
+                        }),
+                      ],
                     ),
-                    const SizedBox(height: 48),
-                    LayoutBuilder(builder: (context, constraints) {
-                      final wide = constraints.maxWidth > 900;
-                      final columns = wide ? 2 : 1;
-                      return GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: columns,
-                        crossAxisSpacing: 24,
-                        mainAxisSpacing: 48,
-                        childAspectRatio: 1.6,
-                        children: [
-                          // Product 1
-                          GestureDetector(
-                            onTap: () => navigateToProduct(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Image.network(
-                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Limited Edition Essential Zip Hoodies',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black87,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  children: const [
-                                    Text(
-                                      '£20.00',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      '£14.99',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF1E88E5),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Product 2
-                          GestureDetector(
-                            onTap: () => navigateToProduct(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Image.network(
-                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Essential T-Shirt',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black87,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  children: const [
-                                    Text(
-                                      '£10.00',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      '£6.99',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF1E88E5),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -208,139 +124,46 @@ class HomeScreen extends StatelessWidget {
             // Signature range 
             Container(
               color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 40.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: Text(
-                        'SIGNATURE RANGE',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey[800],
-                          letterSpacing: 1.5,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 40.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Center(
+                          child: Text(
+                            'SIGNATURE RANGE',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey[800],
+                              letterSpacing: 1.5,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 48),
+                        LayoutBuilder(builder: (context, constraints) {
+                          final wide = constraints.maxWidth > 900;
+                          final columns = wide ? 2 : 1;
+                          final childAspect = wide ? 1.45 : 1.6;
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: columns,
+                            crossAxisSpacing: 24,
+                            mainAxisSpacing: 48,
+                            childAspectRatio: childAspect,
+                            children: [
+                              Center(child: ProductCard(productId: 'signature_hoodie')),
+                              Center(child: ProductCard(productId: 'signature_cap')),
+                            ],
+                          );
+                        }),
+                      ],
                     ),
-                    const SizedBox(height: 32),
-                    LayoutBuilder(builder: (context, constraints) {
-                      final wide = constraints.maxWidth > 900;
-                      final columns = wide ? 2 : 1;
-                      return GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: columns,
-                        crossAxisSpacing: 24,
-                        mainAxisSpacing: 48,
-                        childAspectRatio: 1.6,
-                        children: [
-                          // Signature Product 1
-                          GestureDetector(
-                            onTap: () => navigateToProduct(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Image.network(
-                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    errorBuilder: (c, e, s) =>
-                                        Container(color: Colors.grey[300]),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Signature Hoodie',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black87,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  children: const [
-                                    Text(
-                                      '£35.00',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      '£29.99',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF1E88E5),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Signature Product 2
-                          GestureDetector(
-                            onTap: () => navigateToProduct(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Image.network(
-                                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    errorBuilder: (c, e, s) =>
-                                        Container(color: Colors.grey[300]),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Signature Cap',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black87,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  children: const [
-                                    Text(
-                                      '£12.00',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      '£9.99',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF1E88E5),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -370,24 +193,28 @@ class HomeScreen extends StatelessWidget {
                       mainAxisSpacing: 48,
                       children: const [
                         ProductCard(
+                          productId: 'placeholder_1',
                           title: 'Placeholder Product 1',
                           price: '£10.00',
                           imageUrl:
                               'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
                         ),
                         ProductCard(
+                          productId: 'placeholder_2',
                           title: 'Placeholder Product 2',
                           price: '£15.00',
                           imageUrl:
                               'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
                         ),
                         ProductCard(
+                          productId: 'placeholder_3',
                           title: 'Placeholder Product 3',
                           price: '£20.00',
                           imageUrl:
                               'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
                         ),
                         ProductCard(
+                          productId: 'placeholder_4',
                           title: 'Placeholder Product 4',
                           price: '£25.00',
                           imageUrl:
@@ -461,7 +288,7 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               // Clothing
                               GestureDetector(
-                                onTap: () => navigateToProduct(context),
+                                onTap: () => Navigator.pushNamed(context, '/product', arguments: 'placeholder_1'),
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
@@ -487,7 +314,7 @@ class HomeScreen extends StatelessWidget {
 
                               // Merchandise
                               GestureDetector(
-                                onTap: () => navigateToProduct(context),
+                                onTap: () => Navigator.pushNamed(context, '/product', arguments: 'placeholder_2'),
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
@@ -518,7 +345,7 @@ class HomeScreen extends StatelessWidget {
 
                               // Graduation
                               GestureDetector(
-                                onTap: () => navigateToProduct(context),
+                                onTap: () => Navigator.pushNamed(context, '/product', arguments: 'placeholder_3'),
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
@@ -544,7 +371,7 @@ class HomeScreen extends StatelessWidget {
 
                               // SALE
                               GestureDetector(
-                                onTap: () => navigateToProduct(context),
+                                onTap: () => Navigator.pushNamed(context, '/product', arguments: 'placeholder_4'),
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
@@ -1006,32 +833,20 @@ class _HeroCarouselState extends State<HeroCarousel> {
       width: double.infinity,
       child: Stack(
         children: [
-          PageView.builder(
+          // Background pages (images)
+          PageView(
             controller: _controller,
-            itemCount: _slides.length,
             onPageChanged: (i) => setState(() => _current = i),
-            itemBuilder: (context, index) {
-              final slide = _slides[index];
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.network(
-                    slide['image']!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (c, e, s) => Container(color: Colors.grey[300]),
-                  ),
-                  // Dark overlay
-                  Container(
-                    color: Color.fromRGBO(0, 0, 0, 0.45),
-                  ),
-                ],
-              );
-            },
+            children: _slides
+                .map((s) => _NetworkImageWithFallback(url: s['image']!))
+                .toList(),
           ),
 
-          // Center content (title + subtitle + button)
+          // Center overlay with text and CTA
           Positioned.fill(
-            child: Center(
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -1050,7 +865,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
                   const SizedBox(height: 12),
                   Text(
                     _slides[_current]['subtitle'] ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Color.fromRGBO(255, 255, 255, 0.95),
                     ),
@@ -1064,8 +879,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4d2963),
                       foregroundColor: Colors.white,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                       shape: const RoundedRectangleBorder(),
                     ),
                     child: Text(
@@ -1155,52 +969,61 @@ class _HeroCarouselState extends State<HeroCarousel> {
 }
 
 class ProductCard extends StatelessWidget {
-  final String title;
-  final String price;
-  final String imageUrl;
+  final String? productId;
+  final String? title;
+  final String? price;
+  final String? imageUrl;
 
   const ProductCard({
     super.key,
-    required this.title,
-    required this.price,
-    required this.imageUrl,
+    this.productId,
+    this.title,
+    this.price,
+    this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
+    final Product? prod = (productId != null && productRegistry.containsKey(productId)) ? productRegistry[productId] : null;
+    final displayTitle = prod?.title ?? title ?? 'Product';
+    final displayPrice = prod != null ? '£${prod.price.toStringAsFixed(2)}' : (price ?? '');
+    final displayImage = prod?.images.isNotEmpty == true ? prod!.images.first : (imageUrl ?? '');
+
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/product');
+        if (productId != null) Navigator.pushNamed(context, '/product', arguments: productId);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: Icon(Icons.image_not_supported, color: Colors.grey),
-                  ),
-                );
-              },
-            ),
+            child: displayImage.isNotEmpty
+                ? Image.network(
+                    displayImage,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(Icons.image_not_supported, color: Colors.grey),
+                        ),
+                      );
+                    },
+                  )
+                : Container(color: Colors.grey[300]),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 4),
               Text(
-                title,
+                displayTitle,
                 style: const TextStyle(fontSize: 14, color: Colors.black),
                 maxLines: 2,
               ),
               const SizedBox(height: 4),
               Text(
-                price,
+                displayPrice,
                 style: const TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ],

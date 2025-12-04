@@ -111,6 +111,7 @@ void main() {
                   SizedBox(
                     height: 200,
                     child: const ProductCard(
+                      productId: 'test_product',
                       title: 'Test Product',
                       price: '£9.99',
                       imageUrl: 'https://example.invalid/image.png',

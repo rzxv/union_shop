@@ -29,7 +29,7 @@ void main() {
   // Check that basic UI elements are present
   expect(find.text('Classic Sweatshirts'), findsOneWidget);
   expect(find.text('£23.00'), findsOneWidget);
-  expect(find.text('Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.'), findsOneWidget);
+  expect(find.text('Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.\n\nSoft, comfortable, 50% cotton and 50% polyester.'), findsOneWidget);
       });
     });
 
@@ -46,13 +46,8 @@ void main() {
   await tester.pumpWidget(createTestWidget());
   await tester.pump();
 
-      // Check that student instruction is present
-      expect(
-        find.text(
-          'Students should add size options, colour options, quantity selector, add to cart button, and buy now button here.',
-        ),
-        findsOneWidget,
-      );
+      // Ensure the main CTAs are present instead of the student instruction
+      expect(find.text('ADD TO CART'), findsOneWidget);
       });
     });
 

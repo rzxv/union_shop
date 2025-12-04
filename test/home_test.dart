@@ -36,7 +36,7 @@ void main() {
   // Check that basic UI elements are present
   // AppHeader is replaced with a placeholder in these tests, so we
   // don't assert on its presence here.
-  expect(find.text('ESSENTIAL RANGE - OVER 20% OFF!'), findsOneWidget);
+  expect(find.text('ESSENTIAL RANGE'), findsOneWidget);
   expect(find.text('PRODUCTS SECTION'), findsOneWidget);
   expect(find.text('OUR RANGE'), findsOneWidget);
       });
