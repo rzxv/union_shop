@@ -111,8 +111,8 @@ class HomeScreen extends StatelessWidget {
                             childAspectRatio: childAspect,
                             children: [
                               // Use ProductCard backed by productRegistry so updates live in lib/product.dart
-                              Center(child: ProductCard(productId: 'limited_essential_zip_hoodie')),
-                              Center(child: ProductCard(productId: 'essential_tshirt')),
+                              Center(child: ProductCard(productId: 'limited_essential_zip_hoodie', center: true)),
+                              Center(child: ProductCard(productId: 'essential_tshirt', center: true)),
                             ],
                           );
                         }),
