@@ -9,8 +9,8 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: AutumnCollection(header: SizedBox.shrink(), footer: SizedBox.shrink())));
     await tester.pumpAndSettle();
 
-    // Initially all products should be shown (9 products)
-    expect(find.text('9 products'), findsOneWidget);
+  // Initially all products should be shown (6 products)
+  expect(find.text('6 products'), findsOneWidget);
     expect(find.text('All products'), findsOneWidget);
 
     // Open the filter dropdown and select "T-Shirt"
@@ -21,9 +21,9 @@ void main() {
     await tester.tap(find.text('T-Shirt').last);
     await tester.pumpAndSettle();
 
-    // After selecting T-Shirt, only the 3 T-Shirt items should remain
-    expect(find.text('3 products'), findsOneWidget);
-    expect(find.text('9 products'), findsNothing);
+  // After selecting T-Shirt, only the 2 T-Shirt items should remain
+  expect(find.text('2 products'), findsOneWidget);
+  expect(find.text('6 products'), findsNothing);
   });
   });
 }
