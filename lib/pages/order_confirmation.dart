@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/orders.dart';
+import 'package:union_shop/models/orders.dart';
 
 class OrderConfirmationPage extends StatelessWidget {
   final String orderId;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/about.dart';
-import 'package:union_shop/product_page.dart';
-import 'package:union_shop/product.dart';
-import 'package:union_shop/shared_layout.dart';
-import 'package:union_shop/collections_page.dart';
-import 'package:union_shop/cart_page.dart';
-import 'package:union_shop/order_confirmation.dart';
+import 'package:union_shop/pages/about.dart';
+import 'package:union_shop/pages/product_page.dart';
+import 'package:union_shop/models/product.dart';
+import 'package:union_shop/widgets/shared_layout.dart';
+import 'package:union_shop/pages/collections_page.dart';
+import 'package:union_shop/pages/cart_page.dart';
+import 'package:union_shop/pages/order_confirmation.dart';
 import 'dart:async';
 
 void main() {

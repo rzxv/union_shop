@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:union_shop/shared_layout.dart';
+import 'package:union_shop/widgets/shared_layout.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/shared_layout.dart';
-import 'package:union_shop/product.dart';
+import 'package:union_shop/widgets/shared_layout.dart';
+import 'package:union_shop/models/product.dart';
 
 class AutumnCollection extends StatefulWidget {
   final Widget header;

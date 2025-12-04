@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/cart.dart';
-import 'package:union_shop/orders.dart';
-import 'package:union_shop/shared_layout.dart';
+import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/models/orders.dart';
+import 'package:union_shop/widgets/shared_layout.dart';
 
 class CartPage extends StatefulWidget {
   final Widget header;

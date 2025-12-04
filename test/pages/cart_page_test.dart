@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:union_shop/cart.dart';
-import 'package:union_shop/cart_page.dart';
+import 'package:union_shop/models/cart.dart';
+import 'package:union_shop/pages/cart_page.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:union_shop/order_confirmation.dart';
+import 'package:union_shop/pages/order_confirmation.dart';
 
 void main() {
   group('Cart page', () {

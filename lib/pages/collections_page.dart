@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/shared_layout.dart';
-import 'package:union_shop/autumn_collection.dart';
+import 'package:union_shop/widgets/shared_layout.dart';
+import 'package:union_shop/pages/autumn_collection.dart';
 
 class CollectionsPage extends StatelessWidget {
   final Widget header;

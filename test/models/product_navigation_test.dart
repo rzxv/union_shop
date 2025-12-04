@@ -4,25 +4,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:union_shop/collections_page.dart';
+import 'package:union_shop/main.dart';
+import 'package:union_shop/models/product.dart';
+import 'package:union_shop/pages/product_page.dart';
 
-/// Minimal HttpOverrides that returns a 1x1 transparent PNG for any network image.
 class _TestHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return _FakeHttpClient();
-  }
+  HttpClient createHttpClient(SecurityContext? context) => _FakeHttpClient();
 }
 
 class _FakeHttpClient implements HttpClient {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-
   @override
-  Future<HttpClientRequest> getUrl(Uri url) async {
-    return _FakeHttpClientRequest();
-  }
-
+  Future<HttpClientRequest> getUrl(Uri url) async => _FakeHttpClientRequest();
   @override
   void close({bool force = false}) {}
 }
@@ -30,13 +25,8 @@ class _FakeHttpClient implements HttpClient {
 class _FakeHttpClientRequest implements HttpClientRequest {
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-
   @override
-  Future<HttpClientResponse> close() async {
-    return _FakeHttpClientResponse();
-  }
-
-  // Match the non-nullable API on IOSink
+  Future<HttpClientResponse> close() async => _FakeHttpClientResponse();
   @override
   Encoding encoding = utf8;
 }
@@ -72,10 +62,10 @@ void main() {
     HttpOverrides.global = _TestHttpOverrides();
   });
 
-  testWidgets('Tapping a non-Autumn collection navigates to /product', (WidgetTester tester) async {
-    const testSize = Size(1200, 800);
-    // Force test window size so responsive layouts render the desktop layout.
-    tester.view.physicalSize = testSize;
+  testWidgets('Home -> Product navigation shows product title and price', (WidgetTester tester) async {
+    // Build a minimal app that contains a ProductCard and routes to ProductPage
+  final mediaSize = Size(1200, 1600);
+    tester.view.physicalSize = mediaSize;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
       tester.view.resetPhysicalSize();
@@ -84,19 +74,21 @@ void main() {
 
     final app = MaterialApp(
       routes: {
-        '/product': (ctx) => const Scaffold(body: Center(child: Text('Product Page'))),
+        '/product': (ctx) {
+          final id = ModalRoute.of(ctx)!.settings.arguments as String?;
+          final prod = id != null && productRegistry.containsKey(id) ? productRegistry[id] : null;
+          return ProductPage(product: prod, header: const SizedBox.shrink(), footer: const SizedBox.shrink());
+        }
       },
       home: Scaffold(
         body: Center(
-          child: MediaQuery(
-            data: MediaQueryData(size: testSize),
-            child: SizedBox(
-              width: testSize.width,
-              height: testSize.height,
-              child: const CollectionsPage(
-                header: SizedBox.shrink(),
-                footer: SizedBox.shrink(),
-              ),
+          child: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                SizedBox(height: 220, child: ProductCard(productId: 'essential_tshirt')),
+              ],
             ),
           ),
         ),
@@ -106,13 +98,14 @@ void main() {
     await tester.pumpWidget(app);
     await tester.pumpAndSettle();
 
-    // Ensure the non-Autumn collection title exists
-    expect(find.text('Clothing'), findsOneWidget);
+    expect(find.byType(ProductCard), findsOneWidget);
 
-    // Tap the 'Clothing' collection which should route to '/product'
-    await tester.tap(find.text('Clothing'));
+    await tester.tap(find.byType(ProductCard));
     await tester.pumpAndSettle();
 
-    expect(find.text('Product Page'), findsOneWidget);
+    // Look up the registry values
+    final p = productRegistry['essential_tshirt']!;
+    expect(find.text(p.title), findsOneWidget);
+    expect(find.text('£${p.price.toStringAsFixed(2)}'), findsOneWidget);
   });
 }
