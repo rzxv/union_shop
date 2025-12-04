@@ -4,6 +4,7 @@ import 'package:union_shop/pages/product_page.dart';
 import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/shared_layout.dart';
 import 'package:union_shop/pages/collections_page.dart';
+import 'package:union_shop/pages/sale_collection.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_confirmation.dart';
 import 'dart:async';
@@ -754,11 +755,11 @@ class _HeroCarouselState extends State<HeroCarousel> {
 
   final List<Map<String, String>> _slides = [
     {
-      'title': "What's your next move...",
-      'subtitle': 'Are you with us?',
-      'image':
-          'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-      'button': 'FIND YOUR STUDENT ACCOMMODATION'
+      'title': 'Music Sale — Vinyl & More',
+      'subtitle': 'Discover discounted records, merch and audio gear',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882182/musicsalecollection_bibsom.jpg',
+      'button': 'SHOP MUSIC',
+      'target': 'music'
     },
     {
       'title': 'Make university life easier',
@@ -874,7 +875,15 @@ class _HeroCarouselState extends State<HeroCarousel> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      // dummy action
+                      final s = _slides[_current];
+                      // If the slide has a specific target, navigate accordingly
+                      if (s['target'] == 'music') {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const SaleCollection()));
+                      } else if (s['route'] != null) {
+                        Navigator.pushNamed(context, s['route']!);
+                      } else {
+                        // default / no-op
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4d2963),

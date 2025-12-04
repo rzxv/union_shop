@@ -131,7 +131,7 @@ void main() {
 
     // 1) Carousel initial slide
     expect(find.byType(HeroCarousel), findsOneWidget);
-    expect(find.text("What's your next move..."), findsOneWidget);
+  expect(find.text('Music Sale — Vinyl & More'), findsOneWidget);
 
     // 2) Advance carousel using right chevron
     final rightChevron = find.byIcon(Icons.chevron_right);
