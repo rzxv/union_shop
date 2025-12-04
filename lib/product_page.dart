@@ -234,35 +234,40 @@ class _ProductPageState extends State<ProductPage> {
                                                 border: Border.all(color: Colors.grey.shade300),
                                                 borderRadius: BorderRadius.circular(4),
                                               ),
-                                              child: Row(
-                                                children: [
-                                                  IconButton(
-                                                    padding: EdgeInsets.zero,
-                                                    constraints: const BoxConstraints(),
-                                                    icon: const Icon(Icons.remove, size: 18),
-                                                    onPressed: () => setState(() {
-                                                      if (_quantity > 1) _quantity--;
-                                                    }),
-                                                  ),
-                                                  Expanded(
-                                                    child: TextField(
-                                                      controller: TextEditingController(text: '$_quantity'),
-                                                      keyboardType: TextInputType.number,
-                                                      textAlign: TextAlign.center,
-                                                      decoration: const InputDecoration(border: InputBorder.none, isCollapsed: true),
-                                                      onChanged: (v) {
-                                                        final n = int.tryParse(v) ?? _quantity;
-                                                        setState(() => _quantity = n < 1 ? 1 : n);
-                                                      },
+                                              child: FittedBox(
+                                                alignment: Alignment.centerLeft,
+                                                fit: BoxFit.scaleDown,
+                                                child: Row(
+                                                  children: [
+                                                    IconButton(
+                                                      padding: EdgeInsets.zero,
+                                                      constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                                                      icon: const Icon(Icons.remove, size: 18),
+                                                      onPressed: () => setState(() {
+                                                        if (_quantity > 1) _quantity--;
+                                                      }),
                                                     ),
-                                                  ),
-                                                  IconButton(
-                                                    padding: EdgeInsets.zero,
-                                                    constraints: const BoxConstraints(),
-                                                    icon: const Icon(Icons.add, size: 18),
-                                                    onPressed: () => setState(() => _quantity++),
-                                                  ),
-                                                ],
+                                                    SizedBox(
+                                                      width: 28,
+                                                      child: TextField(
+                                                        controller: TextEditingController(text: '$_quantity'),
+                                                        keyboardType: TextInputType.number,
+                                                        textAlign: TextAlign.center,
+                                                        decoration: const InputDecoration(border: InputBorder.none, isCollapsed: true),
+                                                        onChanged: (v) {
+                                                          final n = int.tryParse(v) ?? _quantity;
+                                                          setState(() => _quantity = n < 1 ? 1 : n);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    IconButton(
+                                                      padding: EdgeInsets.zero,
+                                                      constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                                                      icon: const Icon(Icons.add, size: 18),
+                                                      onPressed: () => setState(() => _quantity++),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ],
