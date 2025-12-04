@@ -5,6 +5,7 @@ import 'package:union_shop/models/product.dart';
 import 'package:union_shop/widgets/shared_layout.dart';
 import 'package:union_shop/pages/collections_page.dart';
 import 'package:union_shop/pages/sale_collection.dart';
+import 'package:union_shop/pages/autumn_collection.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_confirmation.dart';
 import 'dart:async';
@@ -762,11 +763,11 @@ class _HeroCarouselState extends State<HeroCarousel> {
       'target': 'music'
     },
     {
-      'title': 'Make university life easier',
-      'subtitle': 'Support services, events and advice for students',
-      'image':
-          'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-      'button': 'EXPLORE'
+      'title': 'Autumn Favourites',
+      'subtitle': 'Layer up — hoodies, tees and seasonal accessories',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764876698/autumn_collection_dhyehz.png',
+      'button': 'SHOP AUTUMN',
+      'target': 'autumn'
     },
     {
       'title': 'Join the community',
@@ -879,6 +880,8 @@ class _HeroCarouselState extends State<HeroCarousel> {
                       // If the slide has a specific target, navigate accordingly
                       if (s['target'] == 'music') {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const SaleCollection()));
+                      } else if (s['target'] == 'autumn') {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const AutumnCollection()));
                       } else if (s['route'] != null) {
                         Navigator.pushNamed(context, s['route']!);
                       } else {

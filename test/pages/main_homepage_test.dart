@@ -139,9 +139,9 @@ void main() {
     await tester.tap(rightChevron);
     // Let the PageView animation run (HeroCarousel uses a 500ms animation for page changes).
     await tester.pump(const Duration(milliseconds: 600));
-    await tester.pumpAndSettle();
+  await tester.pumpAndSettle();
 
-    expect(find.text('Make university life easier'), findsOneWidget);
+  expect(find.text('Autumn Favourites'), findsOneWidget);
 
     // 3) Pause -> play toggle
     final pauseFinder = find.byIcon(Icons.pause);
