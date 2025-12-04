@@ -41,6 +41,7 @@ class Cart extends ChangeNotifier {
         size: item.size,
         image: item.image,
         quantity: item.quantity,
+        price: item.price,
       );
     }
     notifyListeners();
