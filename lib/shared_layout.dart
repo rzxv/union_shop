@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/cart.dart';
 
 /// Shared header used across pages.
 class AppHeader extends StatelessWidget {
@@ -416,11 +417,34 @@ class AppHeader extends StatelessWidget {
                           constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
                           onPressed: () {},
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.shopping_bag_outlined, size: 26, color: Colors.black87),
-                          padding: const EdgeInsets.all(6),
-                          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-                          onPressed: () {},
+                        // Cart icon with live badge showing total items
+                        AnimatedBuilder(
+                          animation: globalCart,
+                          builder: (ctx, _) {
+                            final count = globalCart.totalItems;
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.shopping_bag_outlined, size: 26, color: Colors.black87),
+                                  padding: const EdgeInsets.all(6),
+                                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                                  onPressed: () => Navigator.pushNamed(ctx, '/cart'),
+                                ),
+                                if (count > 0)
+                                  Positioned(
+                                    right: 6,
+                                    top: 8,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(color: const Color(0xFF4d2963), borderRadius: BorderRadius.circular(12)),
+                                      constraints: const BoxConstraints(minWidth: 20, minHeight: 16),
+                                      child: Text('$count', textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
                         ),
                         // On mobile place the burger/menu button at the very right
                         if (isMobile)

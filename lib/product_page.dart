@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/shared_layout.dart';
+import 'package:union_shop/cart.dart';
 
 class ProductPage extends StatefulWidget {
   final Widget header;
@@ -28,7 +29,15 @@ class _ProductPageState extends State<ProductPage> {
   int _currentImage = 0;
 
   void _addToCart() {
-    // placeholder
+    final item = CartItem(
+      id: 'classic_sweatshirt',
+      title: 'Classic Sweatshirts',
+      color: _selectedColor,
+      size: _selectedSize,
+      image: _images.isNotEmpty ? _images[_currentImage] : null,
+      quantity: _quantity,
+    );
+    globalCart.add(item);
   }
 
   void _buyNow() {
@@ -661,12 +670,11 @@ class _ProductPageState extends State<ProductPage> {
                             ),
 
                             const SizedBox(height: 20),
-                            Row(
+                            Wrap(
+                              spacing: 8,
                               children: [
                                 TextButton.icon(onPressed: () {}, icon: const Icon(Icons.facebook), label: const Text('SHARE')),
-                                const SizedBox(width: 8),
                                 TextButton.icon(onPressed: () {}, icon: const Icon(Icons.share), label: const Text('TWEET')),
-                                const SizedBox(width: 8),
                                 TextButton.icon(onPressed: () {}, icon: const Icon(Icons.push_pin), label: const Text('PIN IT')),
                               ],
                             ),
