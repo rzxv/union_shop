@@ -6,6 +6,7 @@ import 'package:union_shop/widgets/shared_layout.dart';
 import 'package:union_shop/pages/collections_page.dart';
 import 'package:union_shop/pages/sale_collection.dart';
 import 'package:union_shop/pages/autumn_collection.dart';
+import 'package:union_shop/pages/all_products.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_confirmation.dart';
 import 'dart:async';
@@ -37,6 +38,7 @@ class UnionShopApp extends StatelessWidget {
         },
         '/about': (context) => const AboutPage(),
         '/collections': (context) => const CollectionsPage(),
+        '/all-products': (context) => AllProductsPage(),
         '/order-confirmation': (context) {
           final id = ModalRoute.of(context)!.settings.arguments as String;
           return OrderConfirmationPage(orderId: id);
@@ -209,7 +211,7 @@ class HomeScreen extends StatelessWidget {
                     //centered "View all" button
                     Center(
                       child: ElevatedButton(
-                        onPressed: placeholderCallbackForButtons,
+                        onPressed: () => Navigator.pushNamed(context, '/all-products'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF4d2963),
                           foregroundColor: Colors.white,
