@@ -8,7 +8,7 @@ class OrderConfirmationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final order = globalOrders.orders.firstWhere((o) => o.id == orderId, orElse: () => Order(id: orderId, placedAt: DateTime.now(), items: []));
+  final order = globalOrders.orders.firstWhere((o) => o.id == orderId, orElse: () => Order(id: orderId, placedAt: DateTime.now(), items: []));
 
     return Scaffold(
       appBar: AppBar(title: const Text('Order Confirmation')),
@@ -33,15 +33,25 @@ class OrderConfirmationPage extends StatelessWidget {
                   itemBuilder: (ctx, i) {
                     final it = order.items[i];
                     return ListTile(
+                      leading: SizedBox(width: 56, child: Center(child: Text(''))),
                       title: Text(it.title),
                       subtitle: Text('${it.color} • ${it.size}'),
-                      trailing: Text('x${it.quantity}'),
+                      trailing: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('x${it.quantity}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                          Text('£${(it.price * it.quantity).toStringAsFixed(2)}'),
+                        ],
+                      ),
                     );
                   },
                 ),
               ),
             const SizedBox(height: 12),
             Text('Total items: ${order.totalItems}', style: const TextStyle(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 8),
+            Text('Order total: £${order.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false),

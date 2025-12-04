@@ -7,6 +7,7 @@ class OrderItem {
   final String color;
   final String size;
   final int quantity;
+  final double price;
 
   OrderItem({
     required this.id,
@@ -14,6 +15,7 @@ class OrderItem {
     required this.color,
     required this.size,
     required this.quantity,
+    this.price = 0.0,
   });
 }
 
@@ -25,6 +27,7 @@ class Order {
   Order({required this.id, required this.placedAt, required this.items});
 
   int get totalItems => items.fold(0, (p, e) => p + e.quantity);
+  double get totalPrice => items.fold(0.0, (p, e) => p + e.quantity * e.price);
 }
 
 class Orders extends ChangeNotifier {
