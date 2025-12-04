@@ -4,6 +4,7 @@ import 'package:union_shop/cart.dart';
 import 'package:union_shop/cart_page.dart';
 import 'package:union_shop/shared_layout.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:union_shop/order_confirmation.dart';
 
 void main() {
   group('Cart page', () {
@@ -20,7 +21,15 @@ void main() {
         // Instead of navigating via the shared header (which is complex in
         // tests), just pump the CartPage directly and provide a minimal
         // header to avoid AppHeader layout.
-        await tester.pumpWidget(MaterialApp(home: CartPage(header: const SizedBox.shrink(), footer: const SizedBox.shrink())));
+        await tester.pumpWidget(MaterialApp(
+          routes: {
+            '/order-confirmation': (ctx) {
+              final id = ModalRoute.of(ctx)!.settings.arguments as String;
+              return OrderConfirmationPage(orderId: id);
+            }
+          },
+          home: CartPage(header: const SizedBox.shrink(), footer: const SizedBox.shrink()),
+        ));
         await tester.pumpAndSettle();
 
         // Cart page shows product titles
@@ -49,10 +58,11 @@ void main() {
         await tester.tap(checkout);
         await tester.pumpAndSettle();
 
-        // Dialog shown
-        expect(find.textContaining('Your order of'), findsOneWidget);
-        // Cart cleared
-        expect(globalCart.totalItems, 0);
+  // Navigated to order confirmation
+  await tester.pumpAndSettle();
+  expect(find.text('Order Confirmation'), findsOneWidget);
+  // Cart cleared
+  expect(globalCart.totalItems, 0);
       });
     });
   });

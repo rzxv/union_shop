@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/cart.dart';
+import 'package:union_shop/orders.dart';
 import 'package:union_shop/shared_layout.dart';
 
 class CartPage extends StatefulWidget {
@@ -32,16 +33,23 @@ class _CartPageState extends State<CartPage> {
     // Simple checkout that clears the cart and shows confirmation
     final count = globalCart.totalItems;
     if (count == 0) return;
+    // Build an Order from the current cart contents
+    final orderItems = globalCart.items.map((ci) => OrderItem(
+      id: ci.id,
+      title: ci.title,
+      color: ci.color,
+      size: ci.size,
+      quantity: ci.quantity,
+    )).toList(growable: false);
+
+    final order = Order(id: DateTime.now().millisecondsSinceEpoch.toString(), placedAt: DateTime.now(), items: orderItems);
+    globalOrders.add(order);
+
+    // Clear the cart after recording the order
     globalCart.clear();
-    showDialog<void>(context: context, builder: (ctx) {
-      return AlertDialog(
-        title: const Text('Order placed'),
-        content: Text('Your order of $count item(s) has been placed.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('OK')),
-        ],
-      );
-    });
+
+    // Navigate to order confirmation page with the order id
+    Navigator.pushNamed(context, '/order-confirmation', arguments: order.id);
   }
 
   @override

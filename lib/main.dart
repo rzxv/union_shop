@@ -4,6 +4,7 @@ import 'package:union_shop/product_page.dart';
 import 'package:union_shop/shared_layout.dart';
 import 'package:union_shop/collections_page.dart';
 import 'package:union_shop/cart_page.dart';
+import 'package:union_shop/order_confirmation.dart';
 import 'dart:async';
 
 void main() {
@@ -29,6 +30,10 @@ class UnionShopApp extends StatelessWidget {
         '/product': (context) => const ProductPage(),
         '/about': (context) => const AboutPage(),
         '/collections': (context) => const CollectionsPage(),
+        '/order-confirmation': (context) {
+          final id = ModalRoute.of(context)!.settings.arguments as String;
+          return OrderConfirmationPage(orderId: id);
+        },
       },
     );
   }
