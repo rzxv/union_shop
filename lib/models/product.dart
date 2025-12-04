@@ -5,6 +5,7 @@ class Product {
   final List<String> images;
   final List<String> colors;
   final List<String> sizes;
+  final double? salePrice;
   final String description;
 
   const Product({
@@ -14,6 +15,7 @@ class Product {
     this.images = const [],
     this.colors = const ['Black'],
     this.sizes = const ['S', 'M', 'L'],
+    this.salePrice,
     this.description = '',
   });
 }
@@ -126,6 +128,7 @@ const Map<String, Product> productRegistry = {
     id: 'nujabes_cd',
     title: 'Nujabes — Luv(sic) (CD)',
     price: 19.99,
+    salePrice: 12.99,
     images: [
       'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881901/nujabes_cd_riq9rg.jpg',
     ],
@@ -136,6 +139,7 @@ const Map<String, Product> productRegistry = {
     id: 'nujabes_vinyl',
     title: 'Nujabes — Metaphorical Music (Vinyl)',
     price: 34.99,
+    salePrice: 22.74,
     images: [
       'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881919/nujabes_vinyl_xmhn2n.webp',
     ],
@@ -148,6 +152,7 @@ const Map<String, Product> productRegistry = {
     id: 'motfd_cd',
     title: 'Mass of the Fermenting Dregs - World is yours (CD)',
     price: 18.99,
+    salePrice: 12.34,
     images: [
       'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881769/motfd_cd_rkep9j.avif',
     ],
@@ -158,6 +163,7 @@ const Map<String, Product> productRegistry = {
     id: 'motfd_vinyl',
     title: 'Mass of the Fermenting Dregs — Kirametal (Vinyl)',
     price: 29.99,
+    salePrice: 19.49,
     images: [
       'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881772/motfd_vinyl_yslxsj.webp',
     ],
@@ -170,6 +176,7 @@ const Map<String, Product> productRegistry = {
     id: 'radiohead_cd',
     title: 'Radiohead — In rainbows (CD)',
     price: 19.99,
+    salePrice: 12.99,
     images: [
       'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882065/radiohead_cd_gagyat.webp',
     ],
@@ -180,6 +187,7 @@ const Map<String, Product> productRegistry = {
     id: 'radiohead_vinyl',
     title: 'Radiohead — OK Computer (Vinyl)',
     price: 34.99,
+    salePrice: 22.74,
     images: [
       'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882069/radiohead_vinyl_wo2j2n.webp',
     ],

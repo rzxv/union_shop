@@ -51,7 +51,7 @@ class _ProductPageState extends State<ProductPage> {
       size: isMedia ? '' : _selectedSize,
       image: _images.isNotEmpty ? _images[_currentImage] : null,
       quantity: _quantity,
-      price: widget.product?.price ?? widget.price,
+      price: widget.product?.salePrice ?? widget.product?.price ?? widget.price,
     );
     globalCart.add(item);
   }
@@ -197,7 +197,22 @@ class _ProductPageState extends State<ProductPage> {
                                     style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text('£${(widget.product?.price ?? widget.price).toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                                  // Show sale price when available and strike-through the
+                                  // original price for clarity.
+                                  Builder(builder: (context) {
+                                    final displayPrice = widget.product?.salePrice ?? widget.product?.price ?? widget.price;
+                                    final original = widget.product?.salePrice != null ? widget.product?.price : null;
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('£${displayPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                                        if (original != null) ...[
+                                          const SizedBox(height: 4),
+                                          Text('£${original!.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey[600], decoration: TextDecoration.lineThrough)),
+                                        ],
+                                      ],
+                                    );
+                                  }),
                                   const SizedBox(height: 6),
                                   Text('Tax included.', style: TextStyle(color: Colors.grey[600])),
                                   const SizedBox(height: 20),
@@ -447,7 +462,20 @@ class _ProductPageState extends State<ProductPage> {
                             const SizedBox(height: 16),
                             Text(widget.product?.title ?? 'Classic Sweatshirts', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                             const SizedBox(height: 8),
-                            Text('£${(widget.product?.price ?? widget.price).toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                            Builder(builder: (ctx) {
+                              final displayPrice = widget.product?.salePrice ?? widget.product?.price ?? widget.price;
+                              final original = widget.product?.salePrice != null ? widget.product?.price : null;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('£${displayPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                                  if (original != null) ...[
+                                    const SizedBox(height: 4),
+                                    Text('£${original!.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey[600], decoration: TextDecoration.lineThrough)),
+                                  ],
+                                ],
+                              );
+                            }),
                             const SizedBox(height: 6),
                             Text('Tax included.', style: TextStyle(color: Colors.grey[600])),
                             const SizedBox(height: 16),
