@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
   group('header behaviours', () {
     testWidgets('Popup: tapping Shop opens popup and navigates to Collections', (WidgetTester tester) async {
+      await mockNetworkImagesFor(() async {
       final app = MaterialApp(
         routes: {
           '/collections': (ctx) => const Scaffold(body: Center(child: Text('Collections Page'))),
@@ -31,8 +33,8 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(app);
-      await tester.pumpAndSettle();
+  await tester.pumpWidget(app);
+  await tester.pumpAndSettle();
 
       expect(find.text('Shop'), findsOneWidget);
 
@@ -49,9 +51,11 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Collections Page'), findsOneWidget);
+      });
     });
 
     testWidgets('BottomSheet flow: burger -> Shop -> Collections navigates', (WidgetTester tester) async {
+      await mockNetworkImagesFor(() async {
       final app = MaterialApp(
         routes: {
           '/collections': (ctx) => const Scaffold(body: Center(child: Text('Collections Page'))),
@@ -109,8 +113,8 @@ void main() {
         }),
       );
 
-      await tester.pumpWidget(app);
-      await tester.pumpAndSettle();
+  await tester.pumpWidget(app);
+  await tester.pumpAndSettle();
 
       // Open burger
       await tester.tap(find.byIcon(Icons.menu));
@@ -131,6 +135,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Collections Page'), findsOneWidget);
+      });
     });
   });
 }

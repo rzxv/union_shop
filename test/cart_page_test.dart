@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:union_shop/cart.dart';
 import 'package:union_shop/cart_page.dart';
 import 'package:union_shop/shared_layout.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
   group('Cart page', () {
@@ -11,46 +12,48 @@ void main() {
     });
 
     testWidgets('shows items, can change qty and remove, checkout clears cart', (tester) async {
-      // populate cart
-      globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S'));
-      globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2));
+      await mockNetworkImagesFor(() async {
+        // populate cart
+        globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S'));
+        globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2));
 
-      // Instead of navigating via the shared header (which is complex in
-      // tests), just pump the CartPage directly and provide a minimal
-      // header to avoid AppHeader layout.
-      await tester.pumpWidget(MaterialApp(home: CartPage(header: const SizedBox.shrink(), footer: const SizedBox.shrink())));
-      await tester.pumpAndSettle();
+        // Instead of navigating via the shared header (which is complex in
+        // tests), just pump the CartPage directly and provide a minimal
+        // header to avoid AppHeader layout.
+        await tester.pumpWidget(MaterialApp(home: CartPage(header: const SizedBox.shrink(), footer: const SizedBox.shrink())));
+        await tester.pumpAndSettle();
 
-      // Cart page shows product titles
-      expect(find.text('Product 1'), findsOneWidget);
-      expect(find.text('Product 2'), findsOneWidget);
+        // Cart page shows product titles
+        expect(find.text('Product 1'), findsOneWidget);
+        expect(find.text('Product 2'), findsOneWidget);
 
-      // Increase qty for product 1
-      final p1Key = globalCart.items.first.key; // p1
-      final inc = find.byKey(ValueKey('inc-$p1Key'));
-      expect(inc, findsOneWidget);
-      await tester.tap(inc);
-      await tester.pumpAndSettle();
-      expect(globalCart.totalItems, 4); // was 3, p1 incremented to 2 -> total 4
+        // Increase qty for product 1
+        final p1Key = globalCart.items.first.key; // p1
+        final inc = find.byKey(ValueKey('inc-$p1Key'));
+        expect(inc, findsOneWidget);
+        await tester.tap(inc);
+        await tester.pumpAndSettle();
+        expect(globalCart.totalItems, 4); // was 3, p1 incremented to 2 -> total 4
 
-      // Remove product 2
-      final p2Key = globalCart.items.firstWhere((it) => it.id == 'p2').key;
-      final remove = find.byKey(ValueKey('remove-$p2Key'));
-      expect(remove, findsOneWidget);
-      await tester.tap(remove);
-      await tester.pumpAndSettle();
-      expect(globalCart.items.any((it) => it.id == 'p2'), isFalse);
+        // Remove product 2
+        final p2Key = globalCart.items.firstWhere((it) => it.id == 'p2').key;
+        final remove = find.byKey(ValueKey('remove-$p2Key'));
+        expect(remove, findsOneWidget);
+        await tester.tap(remove);
+        await tester.pumpAndSettle();
+        expect(globalCart.items.any((it) => it.id == 'p2'), isFalse);
 
-      // Checkout clears cart and shows dialog
-      final checkout = find.byKey(const ValueKey('checkout'));
-      expect(checkout, findsOneWidget);
-      await tester.tap(checkout);
-      await tester.pumpAndSettle();
+        // Checkout clears cart and shows dialog
+        final checkout = find.byKey(const ValueKey('checkout'));
+        expect(checkout, findsOneWidget);
+        await tester.tap(checkout);
+        await tester.pumpAndSettle();
 
-      // Dialog shown
-      expect(find.textContaining('Your order of'), findsOneWidget);
-      // Cart cleared
-      expect(globalCart.totalItems, 0);
+        // Dialog shown
+        expect(find.textContaining('Your order of'), findsOneWidget);
+        // Cart cleared
+        expect(globalCart.totalItems, 0);
+      });
     });
   });
 }

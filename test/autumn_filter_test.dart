@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:union_shop/autumn_collection.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
   testWidgets('Autumn filter dropdown updates product count', (WidgetTester tester) async {
-  await tester.pumpWidget(const MaterialApp(home: AutumnCollection(header: SizedBox.shrink(), footer: SizedBox.shrink())));
+  await mockNetworkImagesFor(() async {
+    await tester.pumpWidget(const MaterialApp(home: AutumnCollection(header: SizedBox.shrink(), footer: SizedBox.shrink())));
     await tester.pumpAndSettle();
 
     // Initially all products should be shown (9 products)
@@ -22,5 +24,6 @@ void main() {
     // After selecting T-Shirt, only the 3 T-Shirt items should remain
     expect(find.text('3 products'), findsOneWidget);
     expect(find.text('9 products'), findsNothing);
+  });
   });
 }

@@ -124,9 +124,9 @@ void main() {
       ),
     );
 
-    // Short pump to stabilize layout without waiting for repeating timers.
-    await tester.pumpWidget(app);
-    await tester.pump(const Duration(milliseconds: 100));
+  // Short pump to stabilize layout without waiting for repeating timers.
+  await tester.pumpWidget(app);
+  await tester.pump(const Duration(milliseconds: 100));
 
     // 1) Carousel initial slide
     expect(find.byType(HeroCarousel), findsOneWidget);
@@ -156,6 +156,7 @@ void main() {
     await tester.tap(productCard);
     await tester.pumpAndSettle();
 
-    expect(find.text('Product Page'), findsOneWidget);
+  expect(find.text('Product Page'), findsOneWidget);
+  
   }, timeout: const Timeout(Duration(seconds: 30)));
 }
