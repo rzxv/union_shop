@@ -28,19 +28,21 @@ const Map<String, Product> productRegistry = {
     title: 'Limited Edition Essential Zip Hoodies',
     price: 14.99,
     images: [
-      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764888384/navyhoodie_vvh6hu.png',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764888389/purplehoodie_zqubs4.png',
     ],
-    colors: ['Black', 'Grey', 'Purple'],
+    colors: ['Navy', 'Purple'],
     description: 'A cosy zip hoodie in limited edition colours. Our limited edition zip hoodie is made from a soft cotton blend, featuring a full zip and branded embroidery. Perfect for layering.',
   ),
   'essential_tshirt': Product(
     id: 'essential_tshirt',
-    title: 'Essential T-Shirt',
+    title: 'Essential T-Shirts',
     price: 6.99,
     images: [
-      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764888121/whitet_lxjfyx.png',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764888637/purpleshirt_muy8o0.png',
     ],
-    colors: ['Black', 'White'],
+    colors: ['White', 'Purple'],
     description: 'Lightweight essential tee. A staple tee made from breathable cotton. Available in multiple colours and easy to wash.',
   ),
   'signature_hoodie': Product(

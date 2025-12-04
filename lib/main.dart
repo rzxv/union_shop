@@ -1008,21 +1008,27 @@ class ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Enforce a consistent aspect ratio for product images so the
+          // Essential Range grid shows uniform thumbnails.
           Expanded(
             child: displayImage.isNotEmpty
-                ? Image.network(
-                    displayImage,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: const Center(
-                          child: Icon(Icons.image_not_supported, color: Colors.grey),
-                        ),
-                      );
-                    },
+                ? AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: Image.network(
+                      displayImage,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: Icon(Icons.image_not_supported, color: Colors.grey),
+                          ),
+                        );
+                      },
+                    ),
                   )
-                : Container(color: Colors.grey[300]),
+                : AspectRatio(aspectRatio: 4 / 3, child: Container(color: Colors.grey[300])),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
