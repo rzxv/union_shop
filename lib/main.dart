@@ -158,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                             mainAxisSpacing: 48,
                             childAspectRatio: childAspect,
                             children: [
-                              Center(child: ProductCard(productId: 'signature_hoodie')),
+                              Center(child: ProductCard(productId: 'signature_mug')),
                               Center(child: ProductCard(productId: 'signature_cap')),
                             ],
                           );
@@ -177,12 +177,15 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(40.0),
                 child: Column(
                   children: [
-                    const Text(
-                      'PRODUCTS SECTION',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        letterSpacing: 1,
+                    Center(
+                      child: Text(
+                        'PRODUCTS SECTION',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey[800],
+                          letterSpacing: 1.5,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 48),

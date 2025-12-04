@@ -45,21 +45,22 @@ const Map<String, Product> productRegistry = {
     colors: ['White', 'Purple'],
     description: 'Lightweight essential tee. A staple tee made from breathable cotton. Available in multiple colours and easy to wash.',
   ),
-  'signature_hoodie': Product(
-    id: 'signature_hoodie',
-    title: 'Signature Hoodie',
-    price: 29.99,
+  'signature_mug': Product(
+    id: 'signature_mug',
+    title: 'Signature Mug',
+    price: 6.99,
     images: [
-      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764888920/sigcup_hfx1ow.jpg',
     ],
-    description: 'Premium signature hoodie. Our signature hoodie features a heavier weight fabric and embroidered logo for lasting quality.',
+    colors: ['White'],
+    description: 'Ceramic signature mug with printed logo — microwave and dishwasher safe. Perfect for coffee or tea on campus.',
   ),
   'signature_cap': Product(
     id: 'signature_cap',
     title: 'Signature Cap',
     price: 9.99,
     images: [
-      'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764888924/sigcap_ljqxlh.jpg',
     ],
     description: 'Classic cap with logo. A classic structured cap with embroidered badge, adjustable strap, and breathable eyelets.',
   ),
