@@ -24,6 +24,7 @@ class UnionShopApp extends StatelessWidget {
       // By default, the app starts at the '/' route, which is the HomeScreen
       initialRoute: '/',
       routes: {
+        '/cart': (context) => const CartPage(),
         '/product': (context) => const ProductPage(),
         '/about': (context) => const AboutPage(),
         '/collections': (context) => const CollectionsPage(),
