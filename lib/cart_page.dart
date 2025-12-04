@@ -15,6 +15,10 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late final Map<String, TextEditingController> _qtyControllers;
+  
+  // track which items are in "edit" (expanded) mode on mobile
+  // make nullable so hot-reload won't cause a runtime type error for existing State
+  Set<String>? _expandedKeys;
 
   @override
   void initState() {
@@ -78,6 +82,8 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     final items = globalCart.items;
     _ensureControllersForItems(items);
+    _expandedKeys ??= <String>{};
+  final expanded = _expandedKeys!;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -102,7 +108,6 @@ class _CartPageState extends State<CartPage> {
                         child: const Text('Continue shopping', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
                       ),
                     ),
-                    const SizedBox(height: 18),
 
                     LayoutBuilder(builder: (ctx, constraints) {
                       final isMobile = constraints.maxWidth < 700;
@@ -175,7 +180,12 @@ class _CartPageState extends State<CartPage> {
                                             children: [
                                               OutlinedButton(
                                                 key: ValueKey('dec-${it.key}'),
-                                                onPressed: () => globalCart.updateQuantity(it.key, it.quantity - 1),
+                                                onPressed: () {
+                                                  final newQ = it.quantity - 1;
+                                                  globalCart.updateQuantity(it.key, newQ);
+                                                  // update controller immediately so UI reflects new total
+                                                  _qtyControllers[it.key]?.text = (newQ > 0 ? newQ : 0).toString();
+                                                },
                                                 style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                                                 child: const Icon(Icons.remove, size: 18),
                                               ),
@@ -193,7 +203,11 @@ class _CartPageState extends State<CartPage> {
                                               const SizedBox(width: 8),
                                               OutlinedButton(
                                                 key: ValueKey('inc-${it.key}'),
-                                                onPressed: () => globalCart.updateQuantity(it.key, it.quantity + 1),
+                                                onPressed: () {
+                                                  final newQ = it.quantity + 1;
+                                                  globalCart.updateQuantity(it.key, newQ);
+                                                  _qtyControllers[it.key]?.text = newQ.toString();
+                                                },
                                                 style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
                                                 child: const Icon(Icons.add, size: 18),
                                               ),
@@ -294,39 +308,89 @@ class _CartPageState extends State<CartPage> {
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(it.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                                            const SizedBox(height: 6),
-                                            Text('Color: ${it.color} • Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
-                                            const SizedBox(height: 8),
-                                            Row(
+                                            children: [
+                                              Builder(builder: (ctxTitle) {
+                                                final displayTitle = it.title.replaceAll(RegExp(r'\s*\(x\d+\)\s*\$'), '');
+                                                return Text(displayTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis);
+                                              }),
+                                              const SizedBox(height: 6),
+                                              if (expanded.contains(it.key))
+                                                Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic))
+                                              else
+                                                Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                              if (expanded.contains(it.key)) ...[
+                                                const SizedBox(height: 4),
+                                                Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                              ],
+                                              const SizedBox(height: 8),
+                                              Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text('£${it.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16)),
-                                                SizedBox(
-                                                  width: 140,
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      OutlinedButton(
-                                                        key: ValueKey('dec-${it.key}'),
-                                                        onPressed: () => globalCart.updateQuantity(it.key, it.quantity - 1),
-                                                        style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                                        child: const Icon(Icons.remove, size: 18),
+                                                Flexible(child: Text('£${it.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis)),
+                                                // show either an EDIT button (collapsed) or the quantity controls (expanded)
+                                                if (!expanded.contains(it.key)) ...[
+                                                  SizedBox(
+                                                    width: 88,
+                                                    child: OutlinedButton(
+                                                      onPressed: () => setState(() => expanded.add(it.key)),
+                                                      style: OutlinedButton.styleFrom(
+                                                        side: const BorderSide(color: Color(0xFF4d2963)),
+                                                        foregroundColor: const Color(0xFF4d2963),
+                                                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                                                       ),
-                                                      const SizedBox(width: 8),
-                                                      SizedBox(width: 56, child: TextField(controller: ctrl, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18), keyboardType: TextInputType.number, decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.zero), contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8)))),
-                                                      const SizedBox(width: 8),
-                                                      OutlinedButton(
-                                                        key: ValueKey('inc-${it.key}'),
-                                                        onPressed: () => globalCart.updateQuantity(it.key, it.quantity + 1),
-                                                        style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                                        child: const Icon(Icons.add, size: 18),
-                                                      ),
-                                                    ],
+                                                      child: const Text('EDIT', style: TextStyle(letterSpacing: 1.2)),
+                                                    ),
                                                   ),
-                                                ),
-                                                Text('£${(it.price * it.quantity).toStringAsFixed(2)}', style: const TextStyle(fontSize: 16)),
+                                                ] else ...[
+                                                  // expanded: show controls in place of EDIT and a CANCEL button
+                                                  SizedBox(
+                                                    width: 140,
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        OutlinedButton(
+                                                          key: ValueKey('dec-mobile-${it.key}'),
+                                                          onPressed: () {
+                                                            final newQ = it.quantity - 1;
+                                                            globalCart.updateQuantity(it.key, newQ);
+                                                            _qtyControllers[it.key]?.text = (newQ > 0 ? newQ : 0).toString();
+                                                          },
+                                                          style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                                                          child: const Icon(Icons.remove, size: 18),
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                        SizedBox(width: 56, child: TextField(controller: ctrl, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18), keyboardType: TextInputType.number, decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.zero), contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8)))),
+                                                        const SizedBox(width: 8),
+                                                        OutlinedButton(
+                                                          key: ValueKey('inc-mobile-${it.key}'),
+                                                          onPressed: () {
+                                                            final newQ = it.quantity + 1;
+                                                            globalCart.updateQuantity(it.key, newQ);
+                                                            _qtyControllers[it.key]?.text = newQ.toString();
+                                                          },
+                                                          style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                                                          child: const Icon(Icons.add, size: 18),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  SizedBox(
+                                                    width: 88,
+                                                    child: OutlinedButton(
+                                                      onPressed: () => setState(() => expanded.remove(it.key)),
+                                                      style: OutlinedButton.styleFrom(
+                                                        side: const BorderSide(color: Colors.orange),
+                                                        foregroundColor: const Color(0xFF4d2963),
+                                                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                      ),
+                                                      child: const Text('CANCEL', style: TextStyle(letterSpacing: 1.2)),
+                                                    ),
+                                                  ),
+                                                ],
+                                                Flexible(child: Text('£${(it.price * it.quantity).toStringAsFixed(2)}', style: const TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis)),
                                               ],
                                             ),
                                             TextButton(key: ValueKey('remove-${it.key}'), onPressed: () => globalCart.remove(it.key), child: const Text('Remove', style: TextStyle(color: Color(0xFF4d2963)))),
