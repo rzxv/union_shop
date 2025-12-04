@@ -115,21 +115,55 @@ class _CartPageState extends State<CartPage> {
                     const SizedBox(height: 8),
                     const Center(child: Text('Your cart', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800))),
                     const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/collections'),
-                        child: const Text('Continue shopping', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
+                    if (items.isNotEmpty)
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () => Navigator.pushNamed(context, '/collections'),
+                          child: const Text('Continue shopping', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
+                        ),
                       ),
-                    ),
 
                     LayoutBuilder(builder: (ctx, constraints) {
                       final isMobile = constraints.maxWidth < 700;
 
                       if (items.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24.0),
-                          child: Center(child: Text('Your cart is empty')),
+                        // Empty cart UI: show message and a prominent continue-shopping button
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24.0),
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 420),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.shopping_cart_outlined, size: 64, color: Color(0xFF4d2963)),
+                                  const SizedBox(height: 12),
+                                  const Text('Your cart is empty', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                                  const SizedBox(height: 8),
+                                  const Text('Browse our collections and add items to your cart.', textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton.icon(
+                                      onPressed: () => Navigator.pushNamed(context, '/collections'),
+                                      icon: const Icon(Icons.storefront),
+                                      label: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                                        child: Text('Continue shopping', style: TextStyle(fontWeight: FontWeight.w700)),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(color: Color(0xFF4d2963)),
+                                        foregroundColor: const Color(0xFF4d2963),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         );
                       }
 
