@@ -16,7 +16,7 @@ class CollectionsPage extends StatelessWidget {
   static final List<Map<String, String>> _collections = [
     {
       'title': 'Autumn Favourites',
-      'image': 'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764876698/autumn_collection_dhyehz.png',
     },
     {
       'title': 'Black Friday',
