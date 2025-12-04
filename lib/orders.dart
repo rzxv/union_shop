@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:union_shop/cart.dart';
 
 class OrderItem {
   final String id;

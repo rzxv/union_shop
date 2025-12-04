@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:union_shop/cart.dart';
 import 'package:union_shop/cart_page.dart';
-import 'package:union_shop/shared_layout.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:union_shop/order_confirmation.dart';
 

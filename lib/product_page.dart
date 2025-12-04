@@ -310,15 +310,15 @@ class _ProductPageState extends State<ProductPage> {
                                   const SizedBox(height: 12),
                                   ElevatedButton(
                                     onPressed: _buyNow,
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 14.0),
-                                      child: Text('Buy with shop', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-                                    ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFF4d2963),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                                       elevation: 4,
                                       padding: const EdgeInsets.symmetric(horizontal: 18),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 14.0),
+                                      child: Text('Buy with shop', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
                                     ),
                                   ),
 
@@ -643,15 +643,15 @@ class _ProductPageState extends State<ProductPage> {
                             if (constraints.maxWidth > 120)
                               ElevatedButton(
                                 onPressed: _buyNow,
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                                  child: Text('Buy with shop', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF4d2963),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                                   elevation: 4,
                                   padding: const EdgeInsets.symmetric(horizontal: 18),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                                  child: Text('Buy with shop', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
                                 ),
                               ),
 
