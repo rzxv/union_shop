@@ -55,7 +55,21 @@ class _CartPageState extends State<CartPage> {
     final count = globalCart.totalItems;
     if (count == 0) return;
     final orderItems = globalCart.items
-        .map((ci) => OrderItem(id: ci.id, title: ci.title, color: ci.color, size: ci.size, quantity: ci.quantity))
+        .map((ci) {
+          // infer media (CD / Vinyl) from id/title and omit size/color for orders
+          final isMedia = ci.id.toLowerCase().contains('cd') ||
+            ci.id.toLowerCase().contains('vinyl') ||
+            ci.title.toLowerCase().contains('cd') ||
+            ci.title.toLowerCase().contains('vinyl');
+          return OrderItem(
+            id: ci.id,
+            title: ci.title,
+            color: isMedia ? '' : ci.color,
+            size: isMedia ? '' : ci.size,
+            quantity: ci.quantity,
+            price: ci.price,
+          );
+        })
         .toList(growable: false);
     final order = Order(id: DateTime.now().millisecondsSinceEpoch.toString(), placedAt: DateTime.now(), items: orderItems);
     globalOrders.add(order);
@@ -140,6 +154,10 @@ class _CartPageState extends State<CartPage> {
                               itemBuilder: (ctx, i) {
                                 final it = items[i];
                                 final ctrl = _qtyControllers[it.key]!;
+                                final lowerId = it.id.toLowerCase();
+                                final lowerTitle = it.title.toLowerCase();
+                                final isMedia = lowerId.contains('cd') || lowerId.contains('vinyl') || lowerTitle.contains('cd') || lowerTitle.contains('vinyl');
+                                final mediaLabel = lowerId.contains('vinyl') || lowerTitle.contains('vinyl') ? 'Vinyl' : (lowerId.contains('cd') || lowerTitle.contains('cd') ? 'CD' : 'Media');
                                 return Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -156,8 +174,13 @@ class _CartPageState extends State<CartPage> {
                                               children: [
                                                 Text(it.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                                                 const SizedBox(height: 6),
-                                                Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic)),
-                                                Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                // Show a short UX hint for media products; otherwise show colour/size
+                                                if (isMedia)
+                                                  Text('Format: $mediaLabel', style: const TextStyle(fontStyle: FontStyle.italic))
+                                                else ...[
+                                                  Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                  Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                ],
                                                 TextButton(
                                                   key: ValueKey('remove-${it.key}'),
                                                   onPressed: () => globalCart.remove(it.key),
@@ -300,6 +323,10 @@ class _CartPageState extends State<CartPage> {
                             children: List.generate(items.length, (i) {
                               final it = items[i];
                               final ctrl = _qtyControllers[it.key]!;
+                              final lowerId = it.id.toLowerCase();
+                              final lowerTitle = it.title.toLowerCase();
+                              final isMedia = lowerId.contains('cd') || lowerId.contains('vinyl') || lowerTitle.contains('cd') || lowerTitle.contains('vinyl');
+                              final mediaLabel = lowerId.contains('vinyl') || lowerTitle.contains('vinyl') ? 'Vinyl' : (lowerId.contains('cd') || lowerTitle.contains('cd') ? 'CD' : 'Media');
                               return Column(
                                 children: [
                                   const Divider(),
@@ -318,13 +345,14 @@ class _CartPageState extends State<CartPage> {
                                                 return Text(displayTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis);
                                               }),
                                               const SizedBox(height: 6),
-                                              if (expanded.contains(it.key))
-                                                Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic))
-                                              else
+                                              if (isMedia)
+                                                Text('Format: $mediaLabel', style: const TextStyle(fontStyle: FontStyle.italic))
+                                              else ...[
                                                 Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic)),
-                                              if (expanded.contains(it.key)) ...[
-                                                const SizedBox(height: 4),
-                                                Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                if (expanded.contains(it.key)) ...[
+                                                  const SizedBox(height: 4),
+                                                  Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                ],
                                               ],
                                               const SizedBox(height: 8),
                                               Row(

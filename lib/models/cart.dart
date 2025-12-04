@@ -19,7 +19,15 @@ class CartItem {
     required this.price,
   });
 
-  String get key => '$id|$color|$size';
+  // Build a cart key. For media items (CD/Vinyl) color and size are not
+  // meaningful — omit them so identical media entries merge by product id.
+  String get key {
+    final lowerId = id.toLowerCase();
+    final lowerTitle = title.toLowerCase();
+    final isMedia = lowerId.contains('cd') || lowerId.contains('vinyl') || lowerTitle.contains('cd') || lowerTitle.contains('vinyl');
+    if (isMedia) return id;
+    return '$id|$color|$size';
+  }
 }
 
 class Cart extends ChangeNotifier {

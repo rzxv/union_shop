@@ -32,10 +32,14 @@ class OrderConfirmationPage extends StatelessWidget {
                   separatorBuilder: (_, __) => const Divider(),
                   itemBuilder: (ctx, i) {
                     final it = order.items[i];
+                    final lowerId = it.id.toLowerCase();
+                    final lowerTitle = it.title.toLowerCase();
+                    final isMedia = lowerId.contains('cd') || lowerId.contains('vinyl') || lowerTitle.contains('cd') || lowerTitle.contains('vinyl');
+                    final mediaLabel = lowerId.contains('vinyl') || lowerTitle.contains('vinyl') ? 'Vinyl' : (lowerId.contains('cd') || lowerTitle.contains('cd') ? 'CD' : 'Media');
                     return ListTile(
                       leading: SizedBox(width: 56, child: Center(child: Text(''))),
                       title: Text(it.title),
-                      subtitle: Text('${it.color} • ${it.size}'),
+                      subtitle: isMedia ? Text('Format: $mediaLabel') : Text('${it.color} • ${it.size}'),
                       trailing: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
