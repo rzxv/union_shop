@@ -88,11 +88,11 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
   // Use single description field from Product. Keep the previous combined
   // fallback text so UX remains unchanged when no product is supplied.
-  final _description = widget.product?.description ?? 'Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.\n\nSoft, comfortable, 50% cotton and 50% polyester.';
+  final description = widget.product?.description ?? 'Bringing to you, our best selling Classic Sweatshirt. Available in 4 different colours.\n\nSoft, comfortable, 50% cotton and 50% polyester.';
   // If the product is a media item (CD / Vinyl) we should disable the size
   // selector since sizes don't apply. We infer this from the product id or
   // title (IDs use `_cd` / `_vinyl` naming in the registry).
-  final _isMedia = widget.product != null && (
+  final isMedia = widget.product != null && (
     widget.product!.id.toLowerCase().contains('cd') ||
     widget.product!.id.toLowerCase().contains('vinyl') ||
     widget.product!.title.toLowerCase().contains('cd') ||
@@ -208,7 +208,7 @@ class _ProductPageState extends State<ProductPage> {
                                         Text('£${displayPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                                         if (original != null) ...[
                                           const SizedBox(height: 4),
-                                          Text('£${original!.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey[600], decoration: TextDecoration.lineThrough)),
+                                          Text('£${original.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey[600], decoration: TextDecoration.lineThrough)),
                                         ],
                                       ],
                                     );
@@ -239,7 +239,7 @@ class _ProductPageState extends State<ProductPage> {
                                                 underline: const SizedBox.shrink(),
                                                 items: _colors.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                                                 // Disable color selector for media products
-                                                onChanged: _isMedia ? null : (s) {
+                                                onChanged: isMedia ? null : (s) {
                                                   if (s == null) return;
                                                   setState(() {
                                                     _selectedColor = s;
@@ -250,7 +250,7 @@ class _ProductPageState extends State<ProductPage> {
                                                     }
                                                   });
                                                 },
-                                                disabledHint: _isMedia ? Text(_selectedColor, style: TextStyle(color: Colors.grey[700])) : null,
+                                                disabledHint: isMedia ? Text(_selectedColor, style: TextStyle(color: Colors.grey[700])) : null,
                                               ),
                                             ),
                                           ],
@@ -277,8 +277,8 @@ class _ProductPageState extends State<ProductPage> {
                                                 underline: const SizedBox.shrink(),
                                                 items: _sizes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                                                 // Disable the size selector for media items
-                                                onChanged: _isMedia ? null : (s) => setState(() => _selectedSize = s ?? _selectedSize),
-                                                disabledHint: _isMedia ? Text('N/A', style: TextStyle(color: Colors.grey[700])) : null,
+                                                onChanged: isMedia ? null : (s) => setState(() => _selectedSize = s ?? _selectedSize),
+                                                disabledHint: isMedia ? Text('N/A', style: TextStyle(color: Colors.grey[700])) : null,
                                               ),
                                             ),
                                           ],
@@ -379,7 +379,7 @@ class _ProductPageState extends State<ProductPage> {
 
                                   const SizedBox(height: 20),
                                   Text(
-                                    _description,
+                                    description,
                                     style: TextStyle(color: Colors.grey, height: 1.6),
                                   ),
 
@@ -471,7 +471,7 @@ class _ProductPageState extends State<ProductPage> {
                                   Text('£${displayPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                                   if (original != null) ...[
                                     const SizedBox(height: 4),
-                                    Text('£${original!.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey[600], decoration: TextDecoration.lineThrough)),
+                                    Text('£${original.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey[600], decoration: TextDecoration.lineThrough)),
                                   ],
                                 ],
                               );
@@ -497,7 +497,7 @@ class _ProductPageState extends State<ProductPage> {
                                     isExpanded: true,
                                     underline: const SizedBox.shrink(),
                                     items: _colors.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-                                    onChanged: _isMedia ? null : (s) {
+                                    onChanged: isMedia ? null : (s) {
                                       if (s == null) return;
                                       setState(() {
                                         _selectedColor = s;
@@ -507,7 +507,7 @@ class _ProductPageState extends State<ProductPage> {
                                         }
                                       });
                                     },
-                                    disabledHint: _isMedia ? Text(_selectedColor, style: TextStyle(color: Colors.grey[700])) : null,
+                                    disabledHint: isMedia ? Text(_selectedColor, style: TextStyle(color: Colors.grey[700])) : null,
                                   ),
                                 ),
                               ],
@@ -538,8 +538,8 @@ class _ProductPageState extends State<ProductPage> {
                                             isExpanded: true,
                                             underline: const SizedBox.shrink(),
                                             items: _sizes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                            onChanged: _isMedia ? null : (s) => setState(() => _selectedSize = s ?? _selectedSize),
-                                            disabledHint: _isMedia ? Text('N/A', style: TextStyle(color: Colors.grey[700])) : null,
+                                            onChanged: isMedia ? null : (s) => setState(() => _selectedSize = s ?? _selectedSize),
+                                            disabledHint: isMedia ? Text('N/A', style: TextStyle(color: Colors.grey[700])) : null,
                                           ),
                                         ),
                                       ],
@@ -616,8 +616,8 @@ class _ProductPageState extends State<ProductPage> {
                                             isExpanded: true,
                                             underline: const SizedBox.shrink(),
                                             items: _sizes.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                            onChanged: _isMedia ? null : (s) => setState(() => _selectedSize = s ?? _selectedSize),
-                                            disabledHint: _isMedia ? Text('N/A', style: TextStyle(color: Colors.grey[700])) : null,
+                                            onChanged: isMedia ? null : (s) => setState(() => _selectedSize = s ?? _selectedSize),
+                                            disabledHint: isMedia ? Text('N/A', style: TextStyle(color: Colors.grey[700])) : null,
                                           ),
                                         ),
                                       ],
@@ -717,7 +717,7 @@ class _ProductPageState extends State<ProductPage> {
 
                             const SizedBox(height: 20),
                             Text(
-                              _description,
+                              description,
                               style: TextStyle(color: Colors.grey, height: 1.6),
                             ),
 
