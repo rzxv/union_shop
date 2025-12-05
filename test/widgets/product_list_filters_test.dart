@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:union_shop/widgets/shared_layout.dart';
+import '../../lib/utils/products_pagination.dart';
 
 void main() {
   testWidgets('ProductListFilters calls callbacks when selections change (narrow layout)', (WidgetTester tester) async {
