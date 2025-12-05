@@ -68,13 +68,26 @@ class AppHeader extends StatelessWidget {
               final bool isHomeRoute = currentRoute == '/';
               final bool isAboutRoute = currentRoute == '/about';
 
-              return Container(
+                    return Container(
                 height: 96,
                 color: Colors.white,
                 padding: EdgeInsets.only(left: leftPad, right: rightPad),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Back button (shown when there is a route to pop)
+                    if (Navigator.of(context).canPop())
+                      Padding(
+                        padding: EdgeInsets.only(right: isMobile ? 6.0 : 12.0),
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          color: Colors.black87,
+                          padding: const EdgeInsets.all(6),
+                          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                          onPressed: () => Navigator.maybePop(context),
+                        ),
+                      ),
+
                     // Logo
                     ConstrainedBox(
                       constraints: BoxConstraints(
