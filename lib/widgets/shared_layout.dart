@@ -175,12 +175,29 @@ class AppHeader extends StatelessWidget {
                                           final items = <PopupMenuEntry<String>>[];
                                           for (var i = 0; i < cols.length; i++) {
                                             final title = cols[i]['title'] ?? 'Collection';
+                                            // small playful decorations for the first three collections
+                                            final String? deco = i == 0
+                                                ? '🎃' // Autumn
+                                                : i == 1
+                                                    ? '🎵' // Music
+                                                    : i == 2
+                                                        ? '🛍️' // All products
+                                                        : null;
                                             items.add(PopupMenuItem(
                                               value: 'collection:$i',
                                               child: SizedBox(
                                                 width: menuWidth,
                                                 child: ListTile(
-                                                  title: Text(title),
+                                                  title: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Flexible(child: Text(title)),
+                                                      if (deco != null) ...[
+                                                        const SizedBox(width: 8),
+                                                        Text(deco, style: const TextStyle(fontSize: 18)),
+                                                      ],
+                                                    ],
+                                                  ),
                                                   contentPadding: EdgeInsets.zero,
                                                 ),
                                               ),
@@ -319,7 +336,8 @@ class AppHeader extends StatelessWidget {
                                   final navigator = Navigator.of(context);
                                   final overlay = Overlay.of(context).context.findRenderObject() as RenderBox?;
                                   final screenW = MediaQuery.of(context).size.width;
-                                  final menuWidth = screenW > 1000 ? 320.0 : 300.0;
+                                  // Give mobile a bit more breathing room and stay inset from edges
+                                  final menuWidth = (screenW - 32).clamp(260.0, 360.0);
                                   final RelativeRect position = overlay != null
                                       ? RelativeRect.fromLTRB(overlay.size.width - (menuWidth + 16), kToolbarHeight + 8, 16, 0)
                                       : const RelativeRect.fromLTRB(0, 80, 0, 0);
@@ -328,19 +346,44 @@ class AppHeader extends StatelessWidget {
                                   final items = <PopupMenuEntry<String>>[];
                                   for (var i = 0; i < cols.length; i++) {
                                     final title = cols[i]['title'] ?? 'Collection';
+                                    final String? deco = i == 0
+                                        ? '🎃'
+                                        : i == 1
+                                            ? '🎵'
+                                            : i == 2
+                                                ? '🛍️'
+                                                : null;
                                     items.add(PopupMenuItem(
                                       value: 'collection:$i',
                                       child: SizedBox(
                                         width: menuWidth,
                                         child: ListTile(
-                                          title: Text(title),
-                                          contentPadding: EdgeInsets.zero,
+                                          leading: CircleAvatar(
+                                            radius: 18,
+                                            backgroundColor: const Color(0xFF4d2963),
+                                            child: deco != null
+                                                ? Text(deco, style: const TextStyle(fontSize: 18))
+                                                : const Icon(Icons.collections, color: Colors.white, size: 18),
+                                          ),
+                                          title: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                                          trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black54),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                                         ),
                                       ),
                                     ));
                                   }
                                   items.add(const PopupMenuDivider());
-                                  items.add(PopupMenuItem(value: 'all_collections', child: SizedBox(width: menuWidth, child: ListTile(title: const Text('All Collections'), contentPadding: EdgeInsets.zero))));
+                                  items.add(PopupMenuItem(
+                                    value: 'all_collections',
+                                    child: SizedBox(
+                                      width: menuWidth,
+                                      child: ListTile(
+                                        leading: CircleAvatar(radius: 18, backgroundColor: const Color(0xFF4d2963), child: const Icon(Icons.grid_view, color: Colors.white, size: 18)),
+                                        title: const Text('All Collections', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                      ),
+                                    ),
+                                  ));
 
                                   showMenu<String>(context: context, position: position, items: items).then((selected) {
                                     if (selected == null) return;
