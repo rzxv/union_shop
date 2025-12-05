@@ -625,7 +625,7 @@ class _HeroCarouselState extends State<HeroCarousel> {
     {
       'title': 'About us',
       'subtitle': 'Learn about our story, values and how we support campus life',
-      'image': 'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764908900/Portsmouth-Skyline1_up9we9.jpg',
       'button': 'ABOUT US',
       'route': '/about'
     },

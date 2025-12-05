@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/shared_layout.dart';
+import 'package:union_shop/pages/theprintshack_page.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   void _openPersonalisation(BuildContext context) {
-    Navigator.pushNamed(context, '/product');
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const ThePrintShackPage()));
   }
 
   @override
