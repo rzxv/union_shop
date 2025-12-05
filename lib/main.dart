@@ -10,6 +10,9 @@ import 'package:union_shop/pages/all_products.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_confirmation.dart';
 import 'package:union_shop/pages/theprintshack_page.dart';
+import 'package:union_shop/pages/account_page.dart';
+import 'package:union_shop/pages/login_page.dart';
+import 'package:union_shop/pages/signup_page.dart';
 import 'dart:async';
 
 void main() {
@@ -40,6 +43,9 @@ class UnionShopApp extends StatelessWidget {
         '/about': (context) => const AboutPage(),
         '/collections': (context) => const CollectionsPage(),
         '/all-products': (context) => AllProductsPage(),
+        '/account': (context) => const AccountPage(),
+        '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignupPage(),
         '/order-confirmation': (context) {
           final id = ModalRoute.of(context)!.settings.arguments as String;
           return OrderConfirmationPage(orderId: id);

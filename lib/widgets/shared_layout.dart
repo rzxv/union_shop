@@ -288,7 +288,7 @@ class AppHeader extends StatelessWidget {
                           icon: const Icon(Icons.person_outline, size: 26, color: Colors.black87),
                           padding: const EdgeInsets.all(6),
                           constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-                          onPressed: () {},
+                          onPressed: () => Navigator.pushNamed(context, '/account'),
                         ),
                         // Cart icon with live badge showing total items
                         AnimatedBuilder(
