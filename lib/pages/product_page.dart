@@ -54,6 +54,28 @@ class _ProductPageState extends State<ProductPage> {
       price: widget.product?.salePrice ?? widget.product?.price ?? widget.price,
     );
     globalCart.add(item);
+    // show a SnackBar to confirm the add action
+    ScaffoldMessenger.of(context).clearSnackBars();
+    final controller = ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text('${item.title} added to cart'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'View cart',
+          onPressed: () => Navigator.pushNamed(context, '/cart'),
+        ),
+      ),
+    );
+
+    // Ensure the SnackBar is removed after the duration in case of platform
+    // quirks where it could remain visible. Close the controller after the
+    // same duration so the UI always hides the SnackBar.
+    Future.delayed(const Duration(seconds: 3), () {
+      try {
+        controller.close();
+      } catch (_) {}
+    });
   }
 
   // Note: buy-now action removed when Buy with shop button was removed.
