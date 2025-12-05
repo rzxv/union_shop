@@ -150,7 +150,22 @@ class _AllProductsPageState extends State<AllProductsPage> {
                                       children: [
                                         Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
                                         const SizedBox(height: 6),
-                                        Text(price != null ? '£${price.toStringAsFixed(2)}' : '', style: TextStyle(color: Colors.grey[700])),
+                                        if (prod?.salePrice != null)
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '£${price?.toStringAsFixed(2)}',
+                                                style: const TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                '£${prod!.salePrice!.toStringAsFixed(2)}',
+                                                style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w700),
+                                              ),
+                                            ],
+                                          )
+                                        else
+                                          Text(price != null ? '£${price.toStringAsFixed(2)}' : '', style: TextStyle(color: Colors.grey[700])),
                                       ],
                                     ),
                                   ),
