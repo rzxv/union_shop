@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/shared_layout.dart';
 import 'package:union_shop/models/product.dart';
+import 'package:union_shop/utils/products_pagination.dart';
 
 class AutumnCollection extends StatefulWidget {
   final Widget header;
@@ -29,47 +30,24 @@ class _AutumnCollectionState extends State<AutumnCollection> {
     'autumn_accessory_6',
   ];
 
-  static const Map<String, String> _idToType = {
-    'autumn_hoodie_1': 'Hoodie',
-    'autumn_tshirt_2': 'T-Shirt',
-    'autumn_accessory_3': 'Accessory',
-    'autumn_hoodie_4': 'Hoodie',
-    'autumn_tshirt_5': 'T-Shirt',
-    'autumn_accessory_6': 'Accessory',
-  };
 
   String _selectedFilter = 'All products';
   String _selectedSort = 'Featured';
+  int _page = 0;
+  static const int _pageSize = 6;
+  late final ProductsPager _pager = ProductsPager(productRegistry, pageSize: _pageSize, sourceIds: _autumnIds);
 
   List<String> get _filterOptions => ['All products', 'T-Shirt', 'Hoodie', 'Accessory'];
   List<String> get _sortOptions => ['Featured', 'Price: low → high', 'Price: high → low'];
 
-  List<String> get _filteredSortedProductIds {
-    var ids = _autumnIds.where((id) {
-      if (_selectedFilter == 'All products') return true;
-      return _idToType[id] == _selectedFilter;
-    }).toList();
+  List<String> get _filteredSortedProductIds => _pager.filteredSortedIds(selectedFilter: _selectedFilter, selectedSort: _selectedSort);
 
-    if (_selectedSort == 'Price: low → high') {
-      ids.sort((a, b) {
-        final pa = productRegistry[a]?.price ?? double.infinity;
-        final pb = productRegistry[b]?.price ?? double.infinity;
-        return pa.compareTo(pb);
-      });
-    } else if (_selectedSort == 'Price: high → low') {
-      ids.sort((a, b) {
-        final pa = productRegistry[a]?.price ?? double.negativeInfinity;
-        final pb = productRegistry[b]?.price ?? double.negativeInfinity;
-        return pb.compareTo(pa);
-      });
-    }
-
-    return ids;
-  }
+  List<String> get _pageItems => _pager.pageItems(page: _page, selectedFilter: _selectedFilter, selectedSort: _selectedSort);
 
   @override
   Widget build(BuildContext context) {
     final ids = _filteredSortedProductIds;
+    final pageItems = _pageItems;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -105,103 +83,15 @@ class _AutumnCollectionState extends State<AutumnCollection> {
                     const SizedBox(height: 24),
 
                     // Filters / Sort - responsive: stack on narrow widths
-                    LayoutBuilder(builder: (context, constraints) {
-                      final isNarrow = constraints.maxWidth < 440;
-                      if (isNarrow) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: Text('FILTER BY', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                                ),
-                                Expanded(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: _selectedFilter,
-                                    items: _filterOptions.map((f) => DropdownMenuItem(value: f, child: Text(f))).toList(),
-                                    onChanged: (s) => setState(() => _selectedFilter = s ?? 'All products'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: Text('SORT BY', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                                ),
-                                Expanded(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: _selectedSort,
-                                    items: _sortOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                    onChanged: (s) => setState(() => _selectedSort = s ?? 'Featured'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text('${ids.length} products', style: TextStyle(color: Colors.grey[600])),
-                            ),
-                          ],
-                        );
-                      }
-
-                      // Wide layout: three columns
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: Text('FILTER BY', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                                ),
-                                Expanded(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: _selectedFilter,
-                                    items: _filterOptions.map((f) => DropdownMenuItem(value: f, child: Text(f))).toList(),
-                                    onChanged: (s) => setState(() => _selectedFilter = s ?? 'All products'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: Text('SORT BY', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                                ),
-                                Expanded(
-                                  child: DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: _selectedSort,
-                                    items: _sortOptions.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                    onChanged: (s) => setState(() => _selectedSort = s ?? 'Featured'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text('${ids.length} products', style: TextStyle(color: Colors.grey[600])),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
+                    ProductListFilters(
+                      selectedFilter: _selectedFilter,
+                      selectedSort: _selectedSort,
+                      filterOptions: _filterOptions,
+                      sortOptions: _sortOptions,
+                      totalItems: ids.length,
+                      onFilterChanged: (f) => setState(() { _selectedFilter = f; _page = 0; }),
+                      onSortChanged: (s) => setState(() { _selectedSort = s; _page = 0; }),
+                    ),
 
                     const SizedBox(height: 24),
 
@@ -217,7 +107,7 @@ class _AutumnCollectionState extends State<AutumnCollection> {
                         crossAxisCount = 1;
                       }
 
-                      final ids = _filteredSortedProductIds;
+                      
 
                       return GridView.builder(
                         shrinkWrap: true,
@@ -228,9 +118,9 @@ class _AutumnCollectionState extends State<AutumnCollection> {
                           mainAxisSpacing: 24,
                           childAspectRatio: 1,
                         ),
-                        itemCount: ids.length,
+                            itemCount: pageItems.length,
                         itemBuilder: (context, i) {
-                          final id = ids[i];
+                              final id = pageItems[i];
                           final prod = productRegistry.containsKey(id) ? productRegistry[id] : null;
                           final title = prod?.title ?? id;
                           final image = (prod != null && prod.images.isNotEmpty) ? prod.images.first : '';
@@ -277,6 +167,15 @@ class _AutumnCollectionState extends State<AutumnCollection> {
                         },
                       );
                     }),
+
+                    const SizedBox(height: 18),
+
+                    ProductListPagination(
+                      page: _page,
+                      pageSize: _pageSize,
+                      totalItems: ids.length,
+                      onPageChanged: (p) => setState(() => _page = p),
+                    ),
 
                     const SizedBox(height: 28),
                   ],
