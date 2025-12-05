@@ -24,8 +24,8 @@ class CollectionsPage extends StatelessWidget {
       'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764882182/musicsalecollection_bibsom.jpg',
     },
     {
-      'title': 'Clothing',
-      'image': 'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+      'title': 'All Products',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764874464/samples/radial_02.png',
     },
     {
       'title': 'Essential Range',
@@ -53,6 +53,8 @@ class CollectionsPage extends StatelessWidget {
         context,
         MaterialPageRoute(builder: (ctx) => const SaleCollection()),
       );
+    } else if (title == 'All Products') {
+      Navigator.pushNamed(context, '/all-products');
     } else {
       // Keep the previous behaviour for other collections
       Navigator.pushNamed(context, '/product');
