@@ -27,7 +27,7 @@ class _SignupPageState extends State<SignupPage> {
     if (!_validateAndSave()) return;
     setState(() => _loading = true);
     await Future.delayed(const Duration(milliseconds: 700));
-    AuthModel.signUp();
+    AuthModel.signUp(email: _email.text.trim());
     if (!mounted) return;
     Navigator.pushNamedAndRemoveUntil(context, '/account', (r) => false);
   }

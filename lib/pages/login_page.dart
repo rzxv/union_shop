@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!_validateAndSave()) return;
     setState(() => _loading = true);
     await Future.delayed(const Duration(milliseconds: 600));
-    AuthModel.signIn();
+    AuthModel.signIn(email: _email.text.trim());
     if (!mounted) return;
     // Navigate to account page after login
     Navigator.pushNamedAndRemoveUntil(context, '/account', (r) => false);
