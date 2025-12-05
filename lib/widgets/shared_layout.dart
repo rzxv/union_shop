@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/models/cart.dart';
 import 'package:union_shop/pages/sale_collection.dart';
+import 'package:union_shop/pages/theprintshack_page.dart';
 import 'package:union_shop/pages/collections_page.dart';
 import 'package:union_shop/pages/autumn_collection.dart';
 
@@ -191,7 +192,7 @@ class AppHeader extends StatelessWidget {
 
                                       const SizedBox(width: 8),
                                       TextButton(
-                                        onPressed: () {},
+                                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ThePrintShackPage())),
                                         style: TextButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(horizontal: 12),
                                           foregroundColor: Colors.black,
@@ -353,7 +354,7 @@ class AppHeader extends StatelessWidget {
 
                                   break;
                                 case 'printshack':
-                                  // placeholder - original behaviour simply closed the menu
+                                  Future.microtask(() => navigator.push(MaterialPageRoute(builder: (_) => const ThePrintShackPage())));
                                   break;
                                 case 'sale':
                                   Future.microtask(() => navigator.push(MaterialPageRoute(builder: (_) => const SaleCollection())));
