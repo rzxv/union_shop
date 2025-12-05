@@ -760,11 +760,11 @@ class _HeroCarouselState extends State<HeroCarousel> {
       'target': 'autumn'
     },
     {
-      'title': 'Join the community',
-      'subtitle': 'Clubs, societies and ways to get involved',
-      'image':
-          'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-      'button': 'LEARN MORE'
+      'title': 'Print Shack',
+      'subtitle': 'Custom printing and personalised kits — add your text or design',
+      'image': 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764902299/urtexthere_jrsqra.webp',
+      'button': 'VISIT PRINT SHACK',
+      'target': 'printshack'
     },
     {
       'title': 'Shop essentials here',
@@ -872,6 +872,8 @@ class _HeroCarouselState extends State<HeroCarousel> {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const SaleCollection()));
                       } else if (s['target'] == 'autumn') {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const AutumnCollection()));
+                      } else if (s['target'] == 'printshack') {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ThePrintShackPage()));
                       } else if (s['route'] != null) {
                         Navigator.pushNamed(context, s['route']!);
                       } else {
