@@ -125,9 +125,15 @@ class AppHeader extends StatelessWidget {
                                 offset: Offset(centerShift, 0),
                                 child: ConstrainedBox(
                                   constraints: const BoxConstraints(maxWidth: 700),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  // Use a Wrap so the header navigation gracefully
+                                  // wraps or compresses instead of overflowing when
+                                  // the available width is tight in tests or small
+                                  // desktop windows.
+                                  child: Wrap(
+                                    alignment: WrapAlignment.center,
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    spacing: 8,
+                                    runSpacing: 4,
                                     children: [
                                       Column(
                                         mainAxisSize: MainAxisSize.min,

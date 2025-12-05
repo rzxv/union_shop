@@ -38,7 +38,9 @@ void main() {
   // don't assert on its presence here.
   expect(find.text('ESSENTIAL RANGE'), findsOneWidget);
   expect(find.text('PRODUCTS SECTION'), findsOneWidget);
-  expect(find.text('OUR RANGE'), findsOneWidget);
+  // The site no longer has an "OUR RANGE" section; assert the
+  // Signature range heading that is present in the current UI.
+  expect(find.text('SIGNATURE RANGE'), findsOneWidget);
       });
     });
 
@@ -58,17 +60,19 @@ void main() {
         );
         await tester.pump(const Duration(milliseconds: 100));
 
-        // Check that product cards are displayed
-        expect(find.text('Placeholder Product 1'), findsOneWidget);
-        expect(find.text('Placeholder Product 2'), findsOneWidget);
-        expect(find.text('Placeholder Product 3'), findsOneWidget);
-        expect(find.text('Placeholder Product 4'), findsOneWidget);
+        // Check that product cards are displayed using current product
+        // titles from `lib/models/product.dart` which are rendered on
+        // the HomeScreen.
+        expect(find.text('Nujabes — Metaphorical Music (Vinyl)'), findsOneWidget);
+        expect(find.text('Radiohead — OK Computer (Vinyl)'), findsOneWidget);
+        expect(find.text('Russet Zip Hoodie'), findsOneWidget);
+        expect(find.text('Wool Knit Beanie'), findsOneWidget);
 
         // Check prices are displayed (may appear in multiple places so assert at least one)
-        expect(find.text('£10.00'), findsWidgets);
-        expect(find.text('£15.00'), findsWidgets);
-        expect(find.text('£20.00'), findsWidgets);
-        expect(find.text('£25.00'), findsWidgets);
+        expect(find.text('£34.99'), findsWidgets);
+        expect(find.text('£22.74'), findsWidgets);
+        expect(find.text('£18.99'), findsWidgets);
+        expect(find.text('£6.99'), findsWidgets);
       });
     });
 

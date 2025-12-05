@@ -15,6 +15,15 @@ void main() {
 
     testWidgets('placing an order clears cart and records an order', (tester) async {
       await mockNetworkImagesFor(() async {
+        // Use a larger test window so shared layout renders in wide mode
+        const testSize = Size(1200, 800);
+        tester.view.physicalSize = testSize;
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
         // populate cart
   globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S', price: 11.0));
   globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2, price: 6.5));
@@ -41,9 +50,11 @@ void main() {
   await tester.tap(checkout);
   await tester.pumpAndSettle();
 
-  // Should navigate to Order Confirmation page
+  // Should navigate to the updated Order Confirmation page
   await tester.pumpAndSettle();
-  expect(find.text('Order Confirmation'), findsOneWidget);
+  // The OrderConfirmationPage displays a thank-you headline rather than
+  // the literal text "Order Confirmation" in the current UI.
+  expect(find.text('Thank you — your order has been placed!'), findsOneWidget);
 
   // Cart cleared and order recorded
   expect(globalCart.totalItems, 0);

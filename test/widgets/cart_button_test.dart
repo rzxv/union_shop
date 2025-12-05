@@ -31,7 +31,10 @@ void main() {
         expect(addFinder, findsOneWidget);
         await tester.ensureVisible(addFinder);
         await tester.tap(addFinder);
-        await tester.pumpAndSettle();
+  await tester.pumpAndSettle();
+  // Allow the SnackBar's delayed close Future to complete so no
+  // pending timers remain registered with the test binding.
+  await tester.pump(const Duration(seconds: 3));
 
         // Cart model updated
         expect(globalCart.totalItems, 1);

@@ -106,11 +106,13 @@ void main() {
     await tester.pumpWidget(app);
     await tester.pumpAndSettle();
 
-    // Ensure the non-Autumn collection title exists
-    expect(find.text('Clothing'), findsOneWidget);
+  // Ensure a non-Autumn collection title exists. The collections data
+  // was updated; test for 'Merchandise' which maps to the default
+  // '/product' navigation in the current UI.
+  expect(find.text('Merchandise'), findsOneWidget);
 
-    // Tap the 'Clothing' collection which should route to '/product'
-    await tester.tap(find.text('Clothing'));
+  // Tap the 'Merchandise' collection which should route to '/product'
+  await tester.tap(find.text('Merchandise'));
     await tester.pumpAndSettle();
 
     expect(find.text('Product Page'), findsOneWidget);

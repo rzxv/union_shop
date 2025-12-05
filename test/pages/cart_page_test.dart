@@ -13,6 +13,14 @@ void main() {
 
     testWidgets('shows items, can change qty and remove, checkout clears cart', (tester) async {
       await mockNetworkImagesFor(() async {
+  // Force desktop sized window to avoid layout overflow in shared header/footer
+  const testSize = Size(1200, 800);
+  tester.view.physicalSize = testSize;
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+  });
   // populate cart
   globalCart.add(CartItem(id: 'p1', title: 'Product 1', color: 'Black', size: 'S', price: 12.5));
   globalCart.add(CartItem(id: 'p2', title: 'Product 2', color: 'Grey', size: 'M', quantity: 2, price: 7.0));
@@ -60,9 +68,10 @@ void main() {
   await tester.tap(checkout);
   await tester.pumpAndSettle();
 
-  // Navigated to order confirmation
+  // Navigated to order confirmation — the page now displays a thank-you
+  // headline instead of the literal "Order Confirmation" text.
   await tester.pumpAndSettle();
-  expect(find.text('Order Confirmation'), findsOneWidget);
+  expect(find.text('Thank you — your order has been placed!'), findsOneWidget);
   // Cart cleared
   expect(globalCart.totalItems, 0);
       });
