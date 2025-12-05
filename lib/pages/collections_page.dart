@@ -61,6 +61,30 @@ class CollectionsPage extends StatelessWidget {
     }
   }
 
+  // Public accessor for other widgets to read the available collections.
+  static List<Map<String, String>> get collections => _collections;
+
+  // Helper to open a collection from other widgets (keeps navigation logic
+  // consistent with the CollectionsPage behaviour).
+  static void openCollection(BuildContext context, Map<String, String> collection) {
+    final title = (collection['title'] ?? '').trim();
+    if (title == 'Autumn Favourites') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (ctx) => const AutumnCollection()),
+      );
+    } else if (title == 'Music Sale collection') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (ctx) => const SaleCollection()),
+      );
+    } else if (title == 'All Products') {
+      Navigator.pushNamed(context, '/all-products');
+    } else {
+      Navigator.pushNamed(context, '/product');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,141 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/models/cart.dart';
 import 'package:union_shop/pages/sale_collection.dart';
+import 'package:union_shop/pages/collections_page.dart';
+import 'package:union_shop/pages/autumn_collection.dart';
 
 /// Shared header used across pages.
 class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
 
-  void _openBurgerMenu(BuildContext context) {
-    final navigator = Navigator.of(context);
+  // The old bottom-sheet burger menu was replaced by a popup menu for mobile.
+  // Kept the shop bottom-sheet helper for reuse (if desired).
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      ),
-      builder: (c) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text('Home'),
-                onTap: () {
-                  Navigator.pop(c);
-                  navigator.pushNamedAndRemoveUntil('/', (route) => false);
-                },
-              ),
-              ListTile(
-                title: const Text('Shop'),
-                onTap: () {
-                  Navigator.pop(c);
-                  // Use navigator here (captured above) to avoid using the outer
-                  // BuildContext after the pop/async gap.
-                  Future.microtask(() => _showShopBottomSheetWithNavigator(navigator));
-                },
-              ),
-              ListTile(
-                title: const Text('The Print Shack'),
-                onTap: () {
-                  Navigator.pop(c);
-                },
-              ),
-              ListTile(
-                title: const Text('SALE!'),
-                onTap: () {
-                  Navigator.pop(c);
-                  // Push the Sale collection using the captured navigator so
-                  // we don't use the bottom-sheet context after pop.
-                  Future.microtask(() => navigator.push(MaterialPageRoute(builder: (_) => const SaleCollection())));
-                },
-              ),
-              ListTile(
-                title: const Text('About'),
-                onTap: () {
-                  Navigator.pop(c);
-                  navigator.pushNamed('/about');
-                },
-              ),
-              ListTile(
-                title: const Text('UPSU.net'),
-                onTap: () {
-                  Navigator.pop(c);
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // Shop bottom sheet helper removed; replaced by popup menu for mobile.
 
-  Future<void> _showShopBottomSheetWithNavigator(NavigatorState navigator) async {
-    showModalBottomSheet(
-      context: navigator.context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
-                child: Row(
-                  children: const [
-                    Text('Shop', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              _sheetOption(ctx, 'Collections', Icons.list_alt, () {
-                Navigator.pop(ctx);
-                navigator.pushNamed('/collections');
-              }),
-              _sheetOption(ctx, 'Clothing', Icons.checkroom, () {
-                Navigator.pop(ctx);
-                navigator.pushNamed('/product');
-              }),
-              _sheetOption(ctx, 'Merchandise', Icons.widgets, () {
-                Navigator.pop(ctx);
-                navigator.pushNamed('/product');
-              }),
-              _sheetOption(ctx, 'Signature & Essential Range', Icons.star, () {
-                Navigator.pop(ctx);
-                navigator.pushNamed('/product');
-              }),
-              _sheetOption(ctx, 'Portsmouth City Collection', Icons.location_city, () {
-                Navigator.pop(ctx);
-                navigator.pushNamed('/product');
-              }),
-              _sheetOption(ctx, 'Graduation', Icons.school, () {
-                Navigator.pop(ctx);
-                navigator.pushNamed('/product');
-              }),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // The shop-popup helper was inlined into the mobile menu handler to avoid
+  // passing a BuildContext into an async function (which triggers the
+  // use_build_context_synchronously analyzer warning). If you want a reusable
+  // helper in future, prefer passing only non-context objects (NavigatorState,
+  // render box, sizes) captured synchronously from the calling scope.
 
-  Widget _sheetOption(BuildContext ctx, String title, IconData icon, VoidCallback onTap) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black54),
-      title: Text(title),
-      onTap: onTap,
-      dense: true,
-      visualDensity: const VisualDensity(vertical: -2),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-    );
-  }
+  // Sheet-style helper removed; shop submenu now uses a popup menu for mobile
 
   void _navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -259,84 +143,38 @@ class AppHeader extends StatelessWidget {
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         onSelected: (value) {
-                                          if (value == 'collections') {
+                                          if (value == 'all_collections') {
                                             Navigator.pushNamed(context, '/collections');
-                                          } else {
-                                            Navigator.pushNamed(context, '/product');
+                                            return;
+                                          }
+                                          if (value.startsWith('collection:')) {
+                                            final idx = int.tryParse(value.split(':').last) ?? -1;
+                                            if (idx >= 0 && idx < CollectionsPage.collections.length) {
+                                              CollectionsPage.openCollection(context, CollectionsPage.collections[idx]);
+                                            }
                                           }
                                         },
                                         itemBuilder: (ctx) {
                                           final screenW = MediaQuery.of(ctx).size.width;
                                           final menuWidth = screenW > 1000 ? 320.0 : 300.0;
-                                          return [
-                                            PopupMenuItem(
-                                              value: 'clothing',
+                                          final cols = CollectionsPage.collections;
+                                          final items = <PopupMenuEntry<String>>[];
+                                          for (var i = 0; i < cols.length; i++) {
+                                            final title = cols[i]['title'] ?? 'Collection';
+                                            items.add(PopupMenuItem(
+                                              value: 'collection:$i',
                                               child: SizedBox(
                                                 width: menuWidth,
                                                 child: ListTile(
-                                                  leading: const Icon(Icons.checkroom, color: Colors.black54),
-                                                  title: const Text('Clothing'),
+                                                  title: Text(title),
                                                   contentPadding: EdgeInsets.zero,
                                                 ),
                                               ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'merchandise',
-                                              child: SizedBox(
-                                                width: menuWidth,
-                                                child: ListTile(
-                                                  leading: const Icon(Icons.widgets, color: Colors.black54),
-                                                  title: const Text('Merchandise'),
-                                                  contentPadding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'signature',
-                                              child: SizedBox(
-                                                width: menuWidth,
-                                                child: ListTile(
-                                                  leading: const Icon(Icons.star, color: Colors.black54),
-                                                  title: const Text('Signature & Essential Range'),
-                                                  contentPadding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'portsmouth',
-                                              child: SizedBox(
-                                                width: menuWidth,
-                                                child: ListTile(
-                                                  leading: const Icon(Icons.location_city, color: Colors.black54),
-                                                  title: const Text('Portsmouth City Collection'),
-                                                  contentPadding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'graduation',
-                                              child: SizedBox(
-                                                width: menuWidth,
-                                                child: ListTile(
-                                                  leading: const Icon(Icons.school, color: Colors.black54),
-                                                  title: const Text('Graduation 🎓'),
-                                                  contentPadding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                            const PopupMenuDivider(),
-                                            PopupMenuItem(
-                                              value: 'collections',
-                                              child: SizedBox(
-                                                width: menuWidth,
-                                                child: ListTile(
-                                                  title: const Text('Collections'),
-                                                  trailing: const Icon(Icons.arrow_forward, color: Colors.black54),
-                                                  contentPadding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                          ];
+                                            ));
+                                          }
+                                          items.add(const PopupMenuDivider());
+                                          items.add(PopupMenuItem(value: 'all_collections', child: SizedBox(width: menuWidth, child: ListTile(title: const Text('All Collections'), contentPadding: EdgeInsets.zero))));
+                                          return items;
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
@@ -452,11 +290,90 @@ class AppHeader extends StatelessWidget {
                         ),
                         // On mobile place the burger/menu button at the very right
                         if (isMobile)
-                          IconButton(
-                            icon: const Icon(Icons.menu, size: 28, color: Colors.black87),
+                          PopupMenuButton<String>(
                             padding: const EdgeInsets.all(6),
                             constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-                            onPressed: () => _openBurgerMenu(context),
+                            icon: const Icon(Icons.menu, size: 28, color: Colors.black87),
+                            onSelected: (value) {
+                              final navigator = Navigator.of(context);
+                              switch (value) {
+                                case 'home':
+                                  navigator.pushNamedAndRemoveUntil('/', (route) => false);
+                                  break;
+                                case 'shop':
+                                  // Show a submenu of current collections (mobile)
+                                  final navigator = Navigator.of(context);
+                                  final overlay = Overlay.of(context).context.findRenderObject() as RenderBox?;
+                                  final screenW = MediaQuery.of(context).size.width;
+                                  final menuWidth = screenW > 1000 ? 320.0 : 300.0;
+                                  final RelativeRect position = overlay != null
+                                      ? RelativeRect.fromLTRB(overlay.size.width - (menuWidth + 16), kToolbarHeight + 8, 16, 0)
+                                      : const RelativeRect.fromLTRB(0, 80, 0, 0);
+
+                                  final cols = CollectionsPage.collections;
+                                  final items = <PopupMenuEntry<String>>[];
+                                  for (var i = 0; i < cols.length; i++) {
+                                    final title = cols[i]['title'] ?? 'Collection';
+                                    items.add(PopupMenuItem(
+                                      value: 'collection:$i',
+                                      child: SizedBox(
+                                        width: menuWidth,
+                                        child: ListTile(
+                                          title: Text(title),
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                      ),
+                                    ));
+                                  }
+                                  items.add(const PopupMenuDivider());
+                                  items.add(PopupMenuItem(value: 'all_collections', child: SizedBox(width: menuWidth, child: ListTile(title: const Text('All Collections'), contentPadding: EdgeInsets.zero))));
+
+                                  showMenu<String>(context: context, position: position, items: items).then((selected) {
+                                    if (selected == null) return;
+                                    if (selected == 'all_collections') {
+                                      navigator.pushNamed('/collections');
+                                      return;
+                                    }
+                                    if (selected.startsWith('collection:')) {
+                                      final idx = int.tryParse(selected.split(':').last) ?? -1;
+                                      if (idx >= 0 && idx < cols.length) {
+                                        final title = (cols[idx]['title'] ?? '').trim();
+                                        if (title == 'Autumn Favourites') {
+                                          navigator.push(MaterialPageRoute(builder: (_) => const AutumnCollection()));
+                                        } else if (title == 'Music Sale collection') {
+                                          navigator.push(MaterialPageRoute(builder: (_) => const SaleCollection()));
+                                        } else if (title == 'All Products') {
+                                          navigator.pushNamed('/all-products');
+                                        } else {
+                                          navigator.pushNamed('/product');
+                                        }
+                                      }
+                                    }
+                                  });
+
+                                  break;
+                                case 'printshack':
+                                  // placeholder - original behaviour simply closed the menu
+                                  break;
+                                case 'sale':
+                                  Future.microtask(() => navigator.push(MaterialPageRoute(builder: (_) => const SaleCollection())));
+                                  break;
+                                case 'about':
+                                  navigator.pushNamed('/about');
+                                  break;
+                                case 'upsu':
+                                  // placeholder
+                                  break;
+                              }
+                            },
+                            itemBuilder: (ctx) => [
+                              const PopupMenuItem(value: 'home', child: Text('Home')),
+                              const PopupMenuItem(value: 'shop', child: Text('Shop')),
+                              const PopupMenuItem(value: 'printshack', child: Text('The Print Shack')),
+                              const PopupMenuItem(value: 'sale', child: Text('SALE!')),
+                              const PopupMenuItem(value: 'about', child: Text('About')),
+                              const PopupMenuItem(value: 'upsu', child: Text('UPSU.net')),
+                            ],
                           ),
                       ],
                     ),
