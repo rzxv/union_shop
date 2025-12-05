@@ -258,7 +258,13 @@ class _CartPageState extends State<CartPage> {
                                                   Text('Format: $mediaLabel', style: const TextStyle(fontStyle: FontStyle.italic))
                                                 else ...[
                                                   Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic)),
-                                                  Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                  // For personalised items (created by The Print Shack) we store the position in
+                                                  // the `size` field. Detect custom items by the '_custom_' marker in the id
+                                                  // and label it 'Position' instead of 'Size' for clarity.
+                                                  if (it.id.contains('_custom_'))
+                                                    Text('Position: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic))
+                                                  else
+                                                    Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
                                                 ],
                                                 TextButton(
                                                   key: ValueKey('remove-${it.key}'),
@@ -381,7 +387,10 @@ class _CartPageState extends State<CartPage> {
                                               else ...[
                                                 Text('Color: ${it.color}', style: const TextStyle(fontStyle: FontStyle.italic)),
                                                 const SizedBox(height: 4),
-                                                Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                                if (it.id.contains('_custom_'))
+                                                  Text('Position: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic))
+                                                else
+                                                  Text('Size: ${it.size}', style: const TextStyle(fontStyle: FontStyle.italic)),
                                               ],
                                               const SizedBox(height: 8),
                                               // show the line total aligned with the product title
