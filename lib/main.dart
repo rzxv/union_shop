@@ -623,11 +623,11 @@ class _HeroCarouselState extends State<HeroCarousel> {
       'target': 'printshack'
     },
     {
-      'title': 'Shop essentials here',
-      'subtitle': 'Everything you need for campus life',
-      'image':
-          'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-      'button': 'BROWSE PRODUCTS'
+      'title': 'About us',
+      'subtitle': 'Learn about our story, values and how we support campus life',
+      'image': 'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+      'button': 'ABOUT US',
+      'route': '/about'
     },
   ];
 
