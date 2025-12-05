@@ -80,7 +80,7 @@ const Map<String, Product> productRegistry = {
     title: 'Leaf Print T\u2011Shirt',
     price: 12.50,
     images: [
-      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764875054/leaf_print_tshirt_oyqv7k.png',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764875052/leaf_print_tshirt.png',
     ],
     colors: ['Ivory'],
     description: 'Soft cotton tee featuring a subtle leaf-motif print — lightweight and breathable for layering.',
@@ -157,7 +157,7 @@ const Map<String, Product> productRegistry = {
     price: 18.99,
     salePrice: 12.34,
     images: [
-      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764881769/motfd_cd_rkep9j.avif',
+      'https://res.cloudinary.com/dl650ouuv/image/upload/v1764928263/worldisyours_g9dbgs.png',
     ],
     colors: ['Black'],
     description: 'Live Sessions on CD — an energetic capture of the band’s raw live performances and fan favourites.',
