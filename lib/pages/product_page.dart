@@ -56,9 +56,7 @@ class _ProductPageState extends State<ProductPage> {
     globalCart.add(item);
   }
 
-  void _buyNow() {
-    // placeholder
-  }
+  // Note: buy-now action removed when Buy with shop button was removed.
 
   @override
   void initState() {
@@ -359,21 +357,6 @@ class _ProductPageState extends State<ProductPage> {
                                       child: Center(child: Text('ADD TO CART', style: TextStyle(color: Color(0xFF4d2963)))),
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  ElevatedButton(
-                                    onPressed: _buyNow,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF4d2963),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                                      elevation: 4,
-                                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 14.0),
-                                      child: Text('Buy with shop', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-                                    ),
-                                  ),
-
                                   const SizedBox(height: 8),
                                   TextButton(onPressed: () {}, child: const Text('More payment options')),
 
@@ -695,23 +678,7 @@ class _ProductPageState extends State<ProductPage> {
                                 child: Center(child: Text('ADD TO CART', style: TextStyle(color: Color(0xFF4d2963)))),
                               ),
                             ),
-                            const SizedBox(height: 12),
-                            // Show buy button only when there is reasonable horizontal space (keeps tests stable)
-                            if (constraints.maxWidth > 120)
-                              ElevatedButton(
-                                onPressed: _buyNow,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF4d2963),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                                  elevation: 4,
-                                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                                  child: Text('Buy with shop', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-                                ),
-                              ),
-
+                            const SizedBox(height: 8),
                             const SizedBox(height: 8),
                             TextButton(onPressed: () {}, child: const Text('More payment options')),
 
