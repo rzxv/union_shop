@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/widgets/shared_layout.dart';
 import 'package:union_shop/models/auth.dart';
+import 'package:union_shop/models/orders.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -59,25 +60,70 @@ class AccountPage extends StatelessWidget {
                       );
                     }
 
-                    // Signed in: show a simple account summary with sign out option.
+                    // Signed in: show account summary and order history.
                     return ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 720),
+                      constraints: const BoxConstraints(maxWidth: 960),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const SizedBox(height: 12),
-                          const Icon(Icons.person, size: 88, color: Colors.black87),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.person, size: 88, color: Colors.black87),
+                            ],
+                          ),
                           const SizedBox(height: 18),
-                          const Text('Welcome!', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
-                          const SizedBox(height: 12),
-                          const Text('Here you can view past orders and manage your details.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {
-                              AuthModel.signOut();
+                          const Center(child: Text('Welcome!', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800))),
+                          const SizedBox(height: 8),
+                          const Center(child: Text('Here you can view past orders.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey))),
+                          const SizedBox(height: 24),
+
+                          // Orders list
+                          AnimatedBuilder(
+                            animation: globalOrders,
+                            builder: (context, _) {
+                              final orders = globalOrders.orders.reversed.toList();
+                              if (orders.isEmpty) {
+                                return Column(
+                                  children: [
+                                    const SizedBox(height: 28),
+                                    Text('You have no orders yet.', style: TextStyle(color: Colors.grey[700], fontSize: 16)),
+                                    const SizedBox(height: 18),
+                                    ElevatedButton(
+                                      onPressed: () => Navigator.pushNamed(context, '/'),
+                                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4d2963)),
+                                      child: const Text('Continue shopping'),
+                                    ),
+                                  ],
+                                );
+                              }
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: orders.map((order) {
+                                  final placed = order.placedAt.toLocal();
+                                  final dateStr = '${placed.day.toString().padLeft(2, '0')}/${placed.month.toString().padLeft(2, '0')}/${placed.year}';
+                                  final totalPrice = order.totalPrice.toStringAsFixed(2);
+
+                                  return Card(
+                                    margin: const EdgeInsets.symmetric(vertical: 8),
+                                    child: ExpansionTile(
+                                      title: Text('Order ${order.id}'),
+                                      subtitle: Text('$dateStr • ${order.totalItems} items • £$totalPrice'),
+                                      children: order.items.map((it) {
+                                        final itemPrice = (it.price * it.quantity).toStringAsFixed(2);
+                                        return ListTile(
+                                          title: Text(it.title),
+                                          subtitle: Text('${it.color} • ${it.size}'),
+                                          trailing: Text('x${it.quantity}  £$itemPrice'),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
                             },
-                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4d2963)),
-                            child: const Text('Sign out'),
                           ),
                         ],
                       ),
