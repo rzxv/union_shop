@@ -64,8 +64,7 @@ class _ThePrintShackPageState extends State<ThePrintShackPage> {
 
   @override
   Widget build(BuildContext context) {
-    final productImage = productRegistry['essential_tshirt']?.images.first;
-
+    final String? productImage = productRegistry['essential_tshirt']?.images.first;
     const contentPadding = EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0);
 
     return Scaffold(
@@ -82,240 +81,224 @@ class _ThePrintShackPageState extends State<ThePrintShackPage> {
                 child: Container(
                   color: Colors.white,
                   padding: contentPadding,
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    final isNarrow = constraints.maxWidth < 900;
-                    return Flex(
-                      direction: isNarrow ? Axis.vertical : Axis.horizontal,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Left column: form
-                        Expanded(
-                          flex: 5,
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Customise Your Product', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                                  const SizedBox(height: 16),
-
-                                  // Product Type
-                                  const Text('Product Type'),
-                                  const SizedBox(height: 8),
-                                  DropdownButtonFormField<String>(
-                                    initialValue: _selectedProduct,
-                                    items: _productTypes.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
-                                    onChanged: (v) => setState(() => _selectedProduct = v ?? _selectedProduct),
-                                  ),
-                                  const SizedBox(height: 16),
-
-                                  // Font
-                                  const Text('Font'),
-                                  const SizedBox(height: 8),
-                                  DropdownButtonFormField<String>(
-                                    initialValue: _selectedFont,
-                                    items: _fonts.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
-                                    onChanged: (v) => setState(() => _selectedFont = v ?? _selectedFont),
-                                  ),
-                                  const SizedBox(height: 16),
-
-                                  // Text Colour
-                                  const Text('Text Colour'),
-                                  const SizedBox(height: 8),
-                                  DropdownButtonFormField<String>(
-                                    initialValue: _selectedColour,
-                                    items: _textColours.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
-                                    onChanged: (v) => setState(() => _selectedColour = v ?? _selectedColour),
-                                  ),
-                                  const SizedBox(height: 16),
-
-                                  // Position
-                                  const Text('Position'),
-                                  const SizedBox(height: 8),
-                                  DropdownButtonFormField<String>(
-                                    initialValue: _selectedPosition,
-                                    items: _positions.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
-                                    onChanged: (v) => setState(() => _selectedPosition = v ?? _selectedPosition),
-                                  ),
-                                  const SizedBox(height: 16),
-
-                                  // Custom Text
-                                  const Text('Custom Text'),
-                                  const SizedBox(height: 8),
-                                  TextField(
-                                    controller: _textController,
-                                    maxLength: _maxChars,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter your text here...',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          onPressed: _textController.text.trim().isEmpty
-                                              ? null
-                                              : () {
-                                                  // Map product type to a base product id from the registry
-                                                  String baseId;
-                                                  switch (_selectedProduct) {
-                                                    case 'Hoodie':
-                                                      baseId = 'limited_essential_zip_hoodie';
-                                                      break;
-                                                    case 'Mug':
-                                                      baseId = 'signature_mug';
-                                                      break;
-                                                    case 'T-Shirt':
-                                                    default:
-                                                      baseId = 'essential_tshirt';
-                                                  }
-
-                                                  final product = productRegistry[baseId];
-                                                  final price = product?.price ?? 0.0;
-                                                  final image = (product?.images.isNotEmpty ?? false) ? product!.images.first : null;
-
-                                                  // Create a custom id so different personalised texts don't merge unintentionally
-                                                  final customId = '${baseId}_custom_${_textController.text.hashCode}';
-
-                                                  final item = CartItem(
-                                                    id: customId,
-                                                    title: '${product?.title ?? _selectedProduct} - ${_textController.text}',
-                                                    color: _selectedColour,
-                                                    size: _selectedPosition,
-                                                    image: image,
-                                                    quantity: 1,
-                                                    price: price,
-                                                  );
-
-                                                  globalCart.add(item);
-
-                                                  final summary = '$_selectedProduct ($_selectedColour) - "${_textController.text}"';
-                                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to cart: $summary')));
-                                                },
-                                          child: const Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 14),
-                                            child: Text('Add to Cart'),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      OutlinedButton(
-                                        onPressed: () => setState(() {
-                                          _textController.clear();
-                                        }),
-                                        child: const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                                          child: Text('Clear'),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 8),
+                      const Center(
+                        child: Text(
+                          'Print Shack — Personalise your product',
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF333333),
                           ),
                         ),
-                        const SizedBox(width: 20, height: 20),
+                      ),
+                      const SizedBox(height: 36),
 
-                        // Right column: preview and selection summary
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 900;
+                          return Flex(
+                            direction: isNarrow ? Axis.vertical : Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('Preview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                                      const SizedBox(height: 12),
-                                      Container(
-                                        height: 260,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(8),
-                                          border: Border.all(color: Colors.grey.shade300),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(6),
-                                          child: Stack(
-                                            fit: StackFit.expand,
-                                            children: [
-                                              if (productImage != null)
-                                                Image.network(productImage, fit: BoxFit.contain)
-                                              else
-                                                Container(color: Colors.grey.shade200),
+                              // Left column: form
+                              Expanded(
+                                flex: 5,
+                                child: Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Customise Your Product', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                                        const SizedBox(height: 16),
 
-                                              // Overlay text
-                                              if (_textController.text.trim().isNotEmpty)
-                                                Align(
-                                                  alignment: _alignmentForPosition(_selectedPosition),
-                                                  child: FractionallySizedBox(
-                                                    widthFactor: 0.8,
-                                                    child: Text(
-                                                      _textController.text,
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontFamily: _selectedFont,
-                                                        fontSize: 26,
-                                                        color: _colorFromName(_selectedColour),
-                                                        shadows: [
-                                                          const Shadow(offset: Offset(0, 1), blurRadius: 2, color: Colors.black26),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              else
-                                                const Center(
-                                                    child: Text('Enter text to see preview', style: TextStyle(color: Colors.grey))),
-                                            ],
-                                          ),
+                                        const Text('Product Type'),
+                                        const SizedBox(height: 8),
+                                        DropdownButtonFormField<String>(
+                                          initialValue: _selectedProduct,
+                                          items: _productTypes.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                                          onChanged: (v) => setState(() => _selectedProduct = v ?? _selectedProduct),
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(height: 16),
+
+                                        const Text('Font'),
+                                        const SizedBox(height: 8),
+                                        DropdownButtonFormField<String>(
+                                          initialValue: _selectedFont,
+                                          items: _fonts.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                                          onChanged: (v) => setState(() => _selectedFont = v ?? _selectedFont),
+                                        ),
+                                        const SizedBox(height: 16),
+
+                                        const Text('Text Colour'),
+                                        const SizedBox(height: 8),
+                                        DropdownButtonFormField<String>(
+                                          initialValue: _selectedColour,
+                                          items: _textColours.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                                          onChanged: (v) => setState(() => _selectedColour = v ?? _selectedColour),
+                                        ),
+                                        const SizedBox(height: 16),
+
+                                        const Text('Position'),
+                                        const SizedBox(height: 8),
+                                        DropdownButtonFormField<String>(
+                                          initialValue: _selectedPosition,
+                                          items: _positions.map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                                          onChanged: (v) => setState(() => _selectedPosition = v ?? _selectedPosition),
+                                        ),
+                                        const SizedBox(height: 16),
+
+                                        const Text('Custom Text'),
+                                        const SizedBox(height: 8),
+                                        TextField(
+                                          controller: _textController,
+                                          maxLength: _maxChars,
+                                          decoration: const InputDecoration(hintText: 'Enter your text here...', border: OutlineInputBorder()),
+                                        ),
+
+                                        const SizedBox(height: 16),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: _textController.text.trim().isEmpty
+                                                    ? null
+                                                    : () {
+                                                        String baseId;
+                                                        switch (_selectedProduct) {
+                                                          case 'Hoodie':
+                                                            baseId = 'limited_essential_zip_hoodie';
+                                                            break;
+                                                          case 'Mug':
+                                                            baseId = 'signature_mug';
+                                                            break;
+                                                          case 'T-Shirt':
+                                                          default:
+                                                            baseId = 'essential_tshirt';
+                                                        }
+
+                                                        final product = productRegistry[baseId];
+                                                        final price = product?.price ?? 0.0;
+                                                        final image = (product?.images.isNotEmpty ?? false) ? product!.images.first : null;
+
+                                                        final customId = '${baseId}_custom_${_textController.text.hashCode}';
+
+                                                        final item = CartItem(
+                                                          id: customId,
+                                                          title: '${product?.title ?? _selectedProduct} - ${_textController.text}',
+                                                          color: _selectedColour,
+                                                          size: _selectedPosition,
+                                                          image: image,
+                                                          quantity: 1,
+                                                          price: price,
+                                                        );
+
+                                                        globalCart.add(item);
+
+                                                        final summary = '$_selectedProduct ($_selectedColour) - "${_textController.text}"';
+                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Added to cart: $summary')));
+                                                      },
+                                                child: const Padding(padding: EdgeInsets.symmetric(vertical: 14), child: Text('Add to Cart')),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            OutlinedButton(
+                                              onPressed: () => setState(() => _textController.clear()),
+                                              child: const Padding(padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8), child: Text('Clear')),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
+                              const SizedBox(width: 20, height: 20),
 
-                              const SizedBox(height: 12),
-
-                              Card(
-                                elevation: 0,
-                                color: Colors.grey.shade100,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('Your Selection', style: TextStyle(fontWeight: FontWeight.w700)),
-                                      const SizedBox(height: 12),
-                                      _buildSelectionRow('Product', _selectedProduct),
-                                      _buildSelectionRow('Font', _selectedFont),
-                                      _buildSelectionRow('Colour', _selectedColour),
-                                      _buildSelectionRow('Position', _selectedPosition),
-                                      _buildSelectionRow('Text', _textController.text.isEmpty ? '-' : _textController.text),
-                                    ],
-                                  ),
+                              // Right column: preview and selection summary
+                              Expanded(
+                                flex: 4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Card(
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Preview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                                            const SizedBox(height: 12),
+                                            Container(
+                                              height: 260,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(6),
+                                                child: Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    if (productImage != null) Image.network(productImage, fit: BoxFit.contain) else Container(color: Colors.grey.shade200),
+                                                    if (_textController.text.trim().isNotEmpty)
+                                                      Align(
+                                                        alignment: _alignmentForPosition(_selectedPosition),
+                                                        child: FractionallySizedBox(
+                                                          widthFactor: 0.8,
+                                                          child: Text(
+                                                            _textController.text,
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(fontFamily: _selectedFont, fontSize: 26, color: _colorFromName(_selectedColour), shadows: const [Shadow(offset: Offset(0, 1), blurRadius: 2, color: Colors.black26)]),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    else
+                                                      const Center(child: Text('Enter text to see preview', style: TextStyle(color: Colors.grey))),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Card(
+                                      elevation: 0,
+                                      color: Colors.grey.shade100,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Your Selection', style: TextStyle(fontWeight: FontWeight.w700)),
+                                            const SizedBox(height: 12),
+                                            _buildSelectionRow('Product', _selectedProduct),
+                                            _buildSelectionRow('Font', _selectedFont),
+                                            _buildSelectionRow('Colour', _selectedColour),
+                                            _buildSelectionRow('Position', _selectedPosition),
+                                            _buildSelectionRow('Text', _textController.text.isEmpty ? '-' : _textController.text),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
