@@ -19,12 +19,77 @@ class _CartPageState extends State<CartPage> {
   // track which items are in "edit" (expanded) mode on mobile
   // make nullable so hot-reload won't cause a runtime type error for existing State
   Set<String>? _expandedKeys;
+  // store the original quantity for items when entering edit mode so Cancel can restore it
+  final Map<String, int> _originalQuantities = {};
 
   @override
   void initState() {
     super.initState();
     _qtyControllers = {};
     globalCart.addListener(_onCartChanged);
+  }
+
+  // Small reusable quantity selector used in desktop and mobile.
+  Widget _buildQuantitySelector(String key, TextEditingController ctrl, int quantity) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 36,
+          height: 36,
+          child: OutlinedButton(
+            key: ValueKey('dec-$key'),
+            onPressed: () {
+              final newQ = quantity - 1;
+              globalCart.updateQuantity(key, newQ);
+              _qtyControllers[key]?.text = (newQ > 0 ? newQ : 0).toString();
+            },
+            style: OutlinedButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(36, 36),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            ),
+            child: const Icon(Icons.remove, size: 18),
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 56,
+          child: TextField(
+            controller: ctrl,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 16),
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.zero),
+              contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+              isDense: true,
+              filled: true,
+              fillColor: Color(0xFFF8F8F8),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 36,
+          height: 36,
+          child: OutlinedButton(
+            key: ValueKey('inc-$key'),
+            onPressed: () {
+              final newQ = quantity + 1;
+              globalCart.updateQuantity(key, newQ);
+              _qtyControllers[key]?.text = newQ.toString();
+            },
+            style: OutlinedButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(36, 36),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            ),
+            child: const Icon(Icons.add, size: 18),
+          ),
+        ),
+      ],
+    );
   }
 
   void _onCartChanged() => setState(() {});
@@ -77,19 +142,6 @@ class _CartPageState extends State<CartPage> {
     Navigator.pushNamed(context, '/order-confirmation', arguments: order.id);
   }
 
-  void _updateQuantities() {
-    for (final entry in _qtyControllers.entries) {
-      final key = entry.key;
-      final text = entry.value.text.trim();
-      final q = int.tryParse(text) ?? 0;
-      if (q <= 0) {
-        globalCart.remove(key);
-      } else {
-        globalCart.updateQuantity(key, q);
-      }
-    }
-  }
-
   void _placeOrderAndNavigate() => _checkout();
 
   @override
@@ -115,14 +167,7 @@ class _CartPageState extends State<CartPage> {
                     const SizedBox(height: 8),
                     const Center(child: Text('Your cart', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800))),
                     const SizedBox(height: 8),
-                    if (items.isNotEmpty)
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextButton(
-                          onPressed: () => Navigator.pushNamed(context, '/collections'),
-                          child: const Text('Continue shopping', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
-                        ),
-                      ),
+                    // NOTE: moved the "Continue shopping" button to below the checkout button
 
                     LayoutBuilder(builder: (ctx, constraints) {
                       final isMobile = constraints.maxWidth < 700;
@@ -235,44 +280,7 @@ class _CartPageState extends State<CartPage> {
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             alignment: Alignment.center,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                OutlinedButton(
-                                                  key: ValueKey('dec-${it.key}'),
-                                                  onPressed: () {
-                                                    final newQ = it.quantity - 1;
-                                                    globalCart.updateQuantity(it.key, newQ);
-                                                    // update controller immediately so UI reflects new total
-                                                    _qtyControllers[it.key]?.text = (newQ > 0 ? newQ : 0).toString();
-                                                  },
-                                                  style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                                  child: const Icon(Icons.remove, size: 18),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                SizedBox(
-                                                  width: 48,
-                                                  child: TextField(
-                                                    controller: ctrl,
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(fontSize: 18),
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.zero), contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8)),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                OutlinedButton(
-                                                  key: ValueKey('inc-${it.key}'),
-                                                  onPressed: () {
-                                                    final newQ = it.quantity + 1;
-                                                    globalCart.updateQuantity(it.key, newQ);
-                                                    _qtyControllers[it.key]?.text = newQ.toString();
-                                                  },
-                                                  style: OutlinedButton.styleFrom(minimumSize: const Size(36, 36), padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                                  child: const Icon(Icons.add, size: 18),
-                                                ),
-                                              ],
-                                            ),
+                                            child: _buildQuantitySelector(it.key, ctrl, it.quantity),
                                           ),
                                         ),
                                       ),
@@ -287,7 +295,7 @@ class _CartPageState extends State<CartPage> {
 
                             // Actions and subtotal area for desktop
                             LayoutBuilder(builder: (ctx2, c2) {
-                              final actionButtonWidth = 180.0;
+                              final actionButtonWidth = 220.0;
                               final subtotal = items.fold<double>(0.0, (p, e) => p + e.price * e.quantity);
                               final subtotalWidget = Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -315,14 +323,6 @@ class _CartPageState extends State<CartPage> {
                                           children: [
                                             SizedBox(
                                               width: actionButtonWidth,
-                                              child: OutlinedButton(
-                                                onPressed: _updateQuantities,
-                                                style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFF4d2963)), foregroundColor: const Color(0xFF4d2963), padding: const EdgeInsets.symmetric(vertical: 14), shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                                child: const Text('UPDATE', style: TextStyle(letterSpacing: 1.2)),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: actionButtonWidth,
                                               child: ElevatedButton(
                                                 key: const ValueKey('checkout'),
                                                 onPressed: items.isEmpty ? null : _placeOrderAndNavigate,
@@ -330,15 +330,12 @@ class _CartPageState extends State<CartPage> {
                                                 child: const Text('CHECK OUT'),
                                               ),
                                             ),
-                                            SizedBox(
-                                              width: actionButtonWidth,
-                                              child: ElevatedButton(
-                                                onPressed: _placeOrderAndNavigate,
-                                                style: ElevatedButton.styleFrom(backgroundColor: Colors.black, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14), shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                                child: const Text('G Pay'),
-                                              ),
-                                            ),
                                           ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        TextButton(
+                                          onPressed: () => Navigator.pushNamed(context, '/collections'),
+                                          child: const Text('Continue shopping', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
                                         ),
                                       ],
                                     ),
@@ -393,69 +390,64 @@ class _CartPageState extends State<CartPage> {
                                           ],
                                         ),
                                       ),
+                                      SizedBox(
+                                        width: 96,
+                                        child: Align(
+                                          alignment: Alignment.topRight,
+                                              child: !expanded.contains(it.key)
+                                                  ? OutlinedButton(
+                                                      onPressed: () => setState(() {
+                                                        // remember original quantity so Cancel can revert
+                                                        _originalQuantities[it.key] = it.quantity;
+                                                        expanded.add(it.key);
+                                                      }),
+                                                  style: OutlinedButton.styleFrom(
+                                                    side: const BorderSide(color: Color(0xFF4d2963)),
+                                                    foregroundColor: const Color(0xFF4d2963),
+                                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                  ),
+                                                  child: const Text('EDIT', style: TextStyle(letterSpacing: 1.2)),
+                                                )
+                                                  : OutlinedButton(
+                                                      onPressed: () {
+                                                        // revert controller and cart to the original quantity and close editor
+                                                        final orig = _originalQuantities[it.key];
+                                                        if (orig != null) {
+                                                          // restore cart quantity
+                                                          globalCart.updateQuantity(it.key, orig);
+                                                          _qtyControllers[it.key]?.text = orig.toString();
+                                                          _originalQuantities.remove(it.key);
+                                                        } else {
+                                                          // fallback: restore controller to current cart qty
+                                                          _qtyControllers[it.key]?.text = it.quantity.toString();
+                                                        }
+                                                        setState(() => expanded.remove(it.key));
+                                                      },
+                                                  style: OutlinedButton.styleFrom(
+                                                    side: const BorderSide(color: Colors.orange),
+                                                    foregroundColor: const Color(0xFF4d2963),
+                                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                                  ),
+                                                  child: const Text('CANCEL', style: TextStyle(letterSpacing: 1.2)),
+                                                ),
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                                  // trailing EDIT / CANCEL control on the right of the item row
-                                  SizedBox(
-                                    width: 96,
-                                    child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: !expanded.contains(it.key)
-                                          ? OutlinedButton(
-                                              onPressed: () => setState(() => expanded.add(it.key)),
-                                              style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(color: Color(0xFF4d2963)),
-                                                foregroundColor: const Color(0xFF4d2963),
-                                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                              ),
-                                              child: const Text('EDIT', style: TextStyle(letterSpacing: 1.2)),
-                                            )
-                                          : OutlinedButton(
-                                              onPressed: () {
-                                                // revert controller to the current cart quantity and close editor
-                                                _qtyControllers[it.key]?.text = it.quantity.toString();
-                                                setState(() => expanded.remove(it.key));
-                                              },
-                                              style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(color: Colors.orange),
-                                                foregroundColor: const Color(0xFF4d2963),
-                                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                                              ),
-                                              child: const Text('CANCEL', style: TextStyle(letterSpacing: 1.2)),
-                                            ),
-                                    ),
                                   ),
                                   // centered expanded controls shown below the product when editing
                                   if (expanded.contains(it.key))
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                                       child: Center(
-                                        child: Wrap(
-                                          alignment: WrapAlignment.center,
-                                          crossAxisAlignment: WrapCrossAlignment.center,
-                                          spacing: 12,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            // Remove link
-                                            TextButton(
-                                              onPressed: () => globalCart.remove(it.key),
-                                              child: const Text('Remove', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
-                                            ),
-
-                                            // Quantity input
-                                            SizedBox(
-                                              width: 84,
-                                              child: TextField(
-                                                controller: ctrl,
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(fontSize: 18),
-                                                keyboardType: TextInputType.number,
-                                                decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.zero), contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8)),
-                                              ),
-                                            ),
-
-                                            // Update button
+                                            // Centered quantity selector
+                                            _buildQuantitySelector(it.key, ctrl, it.quantity),
+                                            const SizedBox(height: 12),
+                                            // Update button below the selector
                                             SizedBox(
                                               height: 40,
                                               child: ElevatedButton(
@@ -467,6 +459,8 @@ class _CartPageState extends State<CartPage> {
                                                   } else {
                                                     globalCart.updateQuantity(it.key, q);
                                                   }
+                                                  // update finished, clear saved original
+                                                  _originalQuantities.remove(it.key);
                                                   setState(() => expanded.remove(it.key));
                                                 },
                                                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4d2963), foregroundColor: Colors.white, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
@@ -502,15 +496,13 @@ class _CartPageState extends State<CartPage> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Padding(padding: const EdgeInsets.symmetric(vertical: 8.0), child: subtotalWidget),
-                                SizedBox(
-                                  height: 52,
-                                  child: OutlinedButton(
-                                    onPressed: _updateQuantities,
-                                    style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFF4d2963)), foregroundColor: const Color(0xFF4d2963), padding: const EdgeInsets.symmetric(vertical: 14), shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                    child: const Text('UPDATE', style: TextStyle(letterSpacing: 1.2)),
+                                const SizedBox(height: 12),
+                                Center(
+                                  child: TextButton(
+                                    onPressed: () => Navigator.pushNamed(context, '/collections'),
+                                    child: const Text('Continue shopping', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF4d2963))),
                                   ),
                                 ),
-                                const SizedBox(height: 12),
                                 SizedBox(
                                   height: 52,
                                   child: ElevatedButton(
@@ -521,14 +513,6 @@ class _CartPageState extends State<CartPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                SizedBox(
-                                  height: 52,
-                                  child: ElevatedButton(
-                                    onPressed: _placeOrderAndNavigate,
-                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14), shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                                    child: const Text('G Pay'),
-                                  ),
-                                ),
                               ],
                             );
                           }),
