@@ -9,6 +9,7 @@ import 'package:union_shop/pages/autumn_collection.dart';
 import 'package:union_shop/pages/all_products.dart';
 import 'package:union_shop/pages/cart_page.dart';
 import 'package:union_shop/pages/order_confirmation.dart';
+import 'package:union_shop/pages/theprintshack_page.dart';
 import 'dart:async';
 
 void main() {
@@ -406,7 +407,7 @@ class HomeScreen extends StatelessWidget {
                                   height: 320,
                                   child: _NetworkImageWithFallback(
                                     key: const ValueKey('printshack-mobile'),
-                                    url: 'https://shop.upsu.net/cdn/shop/files/upsu_printshack_1024x1024.jpg?v=1',
+                                    url: 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764902299/urtexthere_jrsqra.webp',
                                     altUrl:
                                         'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
                                   ),
@@ -423,13 +424,17 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 20),
                                 ElevatedButton(
-                                  onPressed: placeholderCallbackForButtons,
+                                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ThePrintShackPage())),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF4d2963),
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                   ),
-                                  child: const Text('CLICK HERE TO ADD TEXT!', style: TextStyle(letterSpacing: 1)),
+                                  child: const Text(
+                                    'CLICK HERE TO ADD TEXT!',
+                                    style: TextStyle(letterSpacing: 1, fontSize: 16, fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ],
                             )
@@ -454,13 +459,17 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 28),
                                         ElevatedButton(
-                                          onPressed: placeholderCallbackForButtons,
+                                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ThePrintShackPage())),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: const Color(0xFF4d2963),
                                             foregroundColor: Colors.white,
                                             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                           ),
-                                          child: const Text('CLICK HERE TO ADD TEXT!', style: TextStyle(letterSpacing: 1)),
+                                          child: const Text(
+                                            'CLICK HERE TO ADD TEXT!',
+                                            style: TextStyle(letterSpacing: 1, fontSize: 16, fontWeight: FontWeight.w600),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -473,7 +482,7 @@ class HomeScreen extends StatelessWidget {
                                     height: 340,
                                     child: _NetworkImageWithFallback(
                                       key: const ValueKey('printshack-desktop'),
-                                      url: 'https://shop.upsu.net/cdn/shop/files/upsu_printshack_1024x1024.jpg?v=1',
+                                      url: 'https://res.cloudinary.com/dl650ouuv/image/upload/v1764902299/urtexthere_jrsqra.webp',
                                       altUrl:
                                           'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
                                     ),
